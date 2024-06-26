@@ -73,7 +73,7 @@ exports.helloPubSub = async (event, context) => {
         'bookingReference': bookingReference,
         'concern': concern,
         'status': 'new', // Initial status
-        'comment': ""
+        'comments': ""
       }
     };
     console.log("Storing enquiry with params:", enquiryParams.Item);

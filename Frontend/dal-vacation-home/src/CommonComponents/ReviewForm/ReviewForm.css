@@ -1,0 +1,84 @@
+.review-form {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: auto;
+}
+
+.review-form h2 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.review-form .error {
+  color: #d9534f;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.review-form form {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-form textarea {
+  resize: none;
+  height: 100px;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  color: #333;
+}
+
+.review-form .star-rating {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.review-form .star-rating label {
+  margin-right: 10px;
+  font-size: 1em;
+  color: #333;
+}
+
+.review-form .star-rating .star {
+  font-size: 1.5em;
+  cursor: pointer;
+  color: #ccc;
+  transition: color 0.3s ease;
+}
+
+.review-form .star-rating .star.filled {
+  color: #ffc107;
+}
+
+.review-form .star-rating .star:hover,
+.review-form .star-rating .star:hover ~ .star {
+  color: #ffdd57;
+}
+
+.review-form button {
+  background: #3DC6C1;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.review-form button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.review-form button:hover:not(:disabled) {
+  background: #37b3b0;
+}
