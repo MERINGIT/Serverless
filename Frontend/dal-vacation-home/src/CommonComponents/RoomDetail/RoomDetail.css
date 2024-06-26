@@ -1,0 +1,259 @@
+.room-details-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .top-section {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    position: relative;
+  }
+  
+  .room-images {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  .large-image {
+    width: 50%;
+    max-height: 400px;
+    object-fit: cover;
+  }
+  
+  .small-images {
+    width: 50%;
+    height: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .small-images img {
+    width: calc(50% - 20px);
+    height: calc(0 - 30px);
+    object-fit: cover;
+  }
+  
+  .callout-ctn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    width: 200px;
+    flex-shrink: 0;
+    margin-top: 325px;
+  }
+  
+  .callout-info {
+    background: #8e8e8e;
+    padding: 10px;
+    border: 1px solid #8e8e8e;
+    border-radius: 8px;
+    width: 200px;
+  }
+  
+  .callout-info p {
+    color: whitesmoke;
+    margin: 5px 0;
+    font-size: 1.2em;
+  }
+  
+  .callout-info .price {
+    color: whitesmoke;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .callout-info .rating {
+    font-size: 1.2em;
+    color: #ffc107;
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .callout-info .dot {
+    color: black;
+    margin: 0 8px;
+  }
+  
+  .reserve-button {
+    background: #3DC6C1;
+    border: 2px solid #808080;
+    display: block;
+    margin-top: 10px;
+    padding: 10px;
+    color: whitesmoke;
+    text-align: center;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+  }
+  
+  .reserve-button:hover {
+    background: #2bb2ad;
+  }
+  
+  .addreview {
+    background: #3DC6C1;
+    border: 2px solid #808080;
+    padding: 10px;
+    color: whitesmoke;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    width: fit-content;
+    align-self: flex-end;
+    margin-top: 10px;
+  }
+  
+  .addreview:hover {
+    background: #2bb2ad;
+  }
+  
+  
+  .room-detail  {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .room-detail h1 {
+    margin-bottom: 10px;
+    font-size: 2em;
+    color: #333;
+  }
+  .room-detail .edit-icon {
+    font-size: 0.6em;
+    cursor: pointer;
+    color: black;
+    margin-left: 400px;
+    transition: color 0.3s ease;
+    justify-content: flex-end;
+    ;
+  }
+  .room-detail .delete-icon {
+    font-size: 0.6em;
+    cursor: pointer;
+    color: black;
+    transition: color 0.3s ease;
+    justify-content: flex-end;
+    ;
+  }
+  
+
+  .room-detail p {
+    font-weight: bold;
+    color: #333;
+    font-style: italic;
+  }
+  
+  .room-info .room-description {
+    color:floralwhite;
+    font-style: italic;
+  }
+  
+  
+  
+  .gold-text {
+    color: #ffc107;
+    font-size: 14px;
+  }
+  
+  .black-text {
+    color: whitesmoke;
+    font-size: 14px;
+  }
+  
+  .reviews-section {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .reviews-section h3 {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    color: #333;
+  }
+  
+  .review {
+    background-color: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .review p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 1em;
+  }
+  
+  .review p:first-child {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .review p:nth-child(2) {
+    color: #999;
+    font-size: 0.9em;
+  }
+  
+  .review p:nth-child(3) {
+    font-style: italic;
+  }
+  
+  .review p:nth-child(4) {
+    color: #e6b800;
+    font-size: 1.1em;
+  }
+  
+  .review .review-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .review .review-actions button {
+    background-color: #3DC6C1;
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+  }
+  
+  .review .review-actions button:hover {
+    background-color: #2bb2ad;
+  }
+  
+  .review .review-actions button:last-child {
+    background-color: #ff6b6b;
+  }
+  
+  .review .review-actions button:last-child:hover {
+    background-color: #e65050;
+  }
+  
+  .no-reviews-text {
+    text-align: center;
+    color: #999;
+    font-style: italic;
+  }
