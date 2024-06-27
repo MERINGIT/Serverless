@@ -1,0 +1,70 @@
+.menu-button {
+  background: #8e8e8e;
+  border: 2px solid #8e8e8e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 32px;
+  color: #333333;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+.menu-button:hover {
+  color: #333333;
+}
+
+.profile-dropdown {
+  position: fixed;
+  right: 0;
+  top: 60px;
+  background-color: #333333;
+  border: 1px solid whitesmoke;
+  padding: 10px;
+  list-style-type: none;
+  width: 150px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.profile-dropdown li {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 16px;
+  color: whitesmoke;
+  display: block;
+}
+
+.profile-dropdown li:hover {
+  background-color: #3DC6C1;
+  color: #333333;
+}
+
+.profile-dropdown.hidden {
+  display: none;
+}
+
+.profile-dropdown a {
+  color: whitesmoke;
+  text-decoration: none;
+}
+
+.profile-dropdown a:hover {
+  color: #ccc;
+}
+
+.profile-dropdown a[href="/rooms/current"] {
+  color: whitesmoke;
+}
+
+.profile-dropdown a[href="/rooms/current"]:hover {
+  color: #ccc;
+}
+
+.error {
+  color: red;
+  margin-top: 5px;
+}
