@@ -44,6 +44,11 @@ function ProfileButton() {
     closeMenu();
     navigate('/add');
   };
+  
+  const handleReport = () => {
+    closeMenu();
+    navigate('/dashboard');
+  };
 
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
@@ -58,6 +63,7 @@ function ProfileButton() {
           <li onClick={handleLogin}>Log In</li>
           <li onClick={handleSignup}>Sign Up</li>
           <li onClick={handleAdd}>Add a room</li>
+          <li onClick={handleReport}>Report & Analytics</li>
         </>
       </ul>
     </>

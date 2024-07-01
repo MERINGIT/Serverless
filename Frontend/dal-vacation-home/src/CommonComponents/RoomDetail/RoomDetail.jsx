@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDeleteLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import ReviewForm from '../ReviewForm/ReviewForm';
@@ -8,56 +9,70 @@ import "./RoomDetail.css";
 
 const RoomDetail = () => {
   const { roomId } = useParams();
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState([]);
-  const [room, setRoom] = useState([]);
+  const [room, setRoom] = useState({});
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
 
   useEffect(() => {
     const fetchRoomDetails = async (roomId) => {
-      setLoading(true);
-      const roomData = {
-        id: 1,
-        name: 'Luxury Suite',
-        city: 'Halifax',
-        state: 'Nova Scotia',
-        country: 'Canada',
-        price: 350,
-        avgRating: 4.8,
-        description: 'A luxurious suite with stunning views. Enjoy the best of Halifax from this elegantly furnished space, complete with cozy beds, air conditioning, and other modern amenities. Perfect for a comfortable and memorable stay.',
-        roomImages: [
-          { id: 1, url: 'https://i.pinimg.com/originals/ad/34/ad/ad34ad8485eb2eb9fce806826b65375d.jpg' },
-          { id: 2, url: 'https://i.pinimg.com/originals/ad/34/ad/ad34ad8485eb2eb9fce806826b65375d.jpg' },
-          { id: 3, url: 'https://i.pinimg.com/originals/ad/34/ad/ad34ad8485eb2eb9fce806826b65375d.jpg' },
-        ],
-        Owner: { firstName: 'John', lastName: 'Doe' },
-      };
-      setRoom(roomData);
-      setLoading(false);
+      try {
+        setLoading(true);
+        const response = await axios.post(`https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
+          {
+            httpMethod: 'GET',
+            pathParameters: { roomId: roomId },
+          }
+        );
+        console.log(response.data);
+        setRoom(JSON.parse(response.data.body));
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching room details:', error);
+        setLoading(false);
+      }
     };
 
     const fetchReviews = async () => {
-      const reviewsData = [
-        { id: 1, userId: 2, userName: 'Jane Smith', stars: 5, review: 'Great experience!', createdAt: '2024-06-24' },
-        { id: 2, userId: 3, userName: 'Alice Johnson', stars: 4.5, review: 'Nice room and amenities.', createdAt: '2024-06-22' },
-      ];
-      setReviews(reviewsData);
+      try {
+        const response = await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, { httpMethod: "GET" });
+        var allReviews = JSON.parse(response.data.body);
+        allReviews=allReviews.reviews;
+        console.log(allReviews);
+        
+        // Filter reviews by roomid
+        const filteredReviews = allReviews.filter(review => review.roomid === roomId);
+        setReviews(filteredReviews);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+      }
     };
-
+    
     fetchRoomDetails(roomId);
     fetchReviews();
-  }, []);
+  }, [roomId]);
 
   const handleEditReview = (reviewId) => {
-    const selected = reviews.find(review => review.id === reviewId);
+    const selected = reviews.find(review => review.reviewid === reviewId);
     setSelectedReview(selected);
     setIsModalOpen(true);
   };
 
-  const handleDeleteReview = (reviewId) => {
-    const updatedReviews = reviews.filter(review => review.id !== reviewId);
-    setReviews(updatedReviews);
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, 
+        {
+          httpMethod: 'DELETE',
+          body: { reviewid: reviewId },
+        }
+      );
+      const updatedReviews = reviews.filter(review => review.reviewid !== reviewId);
+      setReviews(updatedReviews);
+    } catch (error) {
+      console.error('Error deleting review:', error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -65,51 +80,116 @@ const RoomDetail = () => {
     setIsModalOpen(false);
   };
 
-  const handleReviewCreation = (newReview) => {
+  const handleReviewCreation = async (newReview) => {
     if (selectedReview) {
-      const updatedReviews = reviews.map(review =>
-        review.id === selectedReview.id ? { ...review, ...newReview } : review
-      );
-      setReviews(updatedReviews);
-      setIsModalOpen(false);
-      setSelectedReview(null);
+      try {
+        await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, 
+          {
+            httpMethod: 'PUT',
+            body: {
+              reviewid: selectedReview.reviewid,
+              comment: newReview.review,
+              rating: newReview.stars,
+            },
+          }
+        );
+        const updatedReviews = reviews.map(review =>
+          review.reviewid === selectedReview.reviewid ? { ...review, ...newReview } : review
+        );
+        setReviews(updatedReviews);
+        setIsModalOpen(false);
+        setSelectedReview(null);
+        window.location.reload();
+      } catch (error) {
+        console.error('Error updating review:', error);
+      }
     } else {
-      setReviews([...reviews, { ...newReview, id: Date.now(), userName: 'Current User', createdAt: new Date().toISOString() }]);
-      setIsModalOpen(false);
+      try {
+        await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, 
+          {
+            httpMethod: 'POST',
+            body: {
+              reviewid: Date.now().toString(),
+              comment: newReview.review,
+              rating: newReview.stars,
+              roomid: roomId,
+              userid: room.userid, // Replace with actual user ID
+              username: "Mini Saju", // Replace with actual user name
+            },
+          }
+        );
+        setReviews([...reviews, { ...newReview, reviewid: Date.now(), userName: 'Current User', createdAt: new Date().toISOString() }]);
+        setIsModalOpen(false);
+        window.location.reload();
+      } catch (error) {
+        console.error('Error creating review:', error);
+      }
     }
+  };
+
+  const onDelete = async () => {
+    try {
+      await axios.post(`https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
+        {
+          httpMethod: 'DELETE',
+          pathParameters: { roomId: roomId },
+        }
+      );
+      alert('Room deleted successfully');
+      navigate('/');
+    } catch (error) {
+      console.error('Error deleting room:', error);
+      alert('Failed to delete the room');
+    }
+  };
+
+  const onUpdate = () => {
+    navigate(`/update-room/${roomId}`);
   };
 
   const reviewText = reviews.length === 1 ? '1 Review' : `${reviews.length} Reviews`;
 
   const calculateAverageRating = (reviews) => {
     if (reviews.length === 0) return 'New';
-    const totalRating = reviews.reduce((acc, review) => acc + review.stars, 0);
+    const totalRating = reviews.reduce((acc, review) => acc + parseInt(review.rating), 0);
     return (totalRating / reviews.length).toFixed(1);
   };
+  
 
   const averageRating = calculateAverageRating(reviews);
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+//need to be changed based on admin type
   return (
     <div className="room-details-page">
       <div className="top-section">
         <div className="room-detail">
-          <h1>{room.name} <FontAwesomeIcon icon={faEdit} className="edit-icon"/> <FontAwesomeIcon icon={faDeleteLeft} className="delete-icon" /></h1>
-          <p>Hosted by {room.Owner?.firstName} {room.Owner?.lastName}</p>
-          <p>{room.city}, {room.state}, {room.country}</p>
+          <h1>{room.roomtype} <FontAwesomeIcon icon={faEdit} className="edit-icon" onClick={onUpdate} /> <FontAwesomeIcon icon={faDeleteLeft} className="delete-icon" onClick={onDelete} /></h1>
+          <p>Hosted by {room.hostedby}</p>
+          <p>{room.address},{room.city}, {room.state}</p>
           <div className="room-images">
-            {room.roomImages && room.roomImages.length > 0 && (
+            {room.imageurl && (
               <>
-                <img src={room.roomImages[0]?.url} alt={room.name} className="large-image" />
+                <img src={room.imageurl} alt={room.roomtype} className="large-image" />
                 <div className="small-images">
-                  {room.roomImages.slice(1, 5).map((image) => (
-                    <img key={image.id} src={image.url} alt={room.name} />
-                  ))}
+                  <img key={room.roomid + "1"} src={room.imageurl} alt={room.roomtype} />
+                  <img key={room.roomid + "2"} src={room.imageurl} alt={room.roomtype} />
+                  <img key={room.roomid + "3"} src={room.imageurl} alt={room.roomtype} />
+                  <img key={room.roomid + "4"} src={room.imageurl} alt={room.roomtype} />
                 </div>
               </>
             )}
           </div>
           <div className="room-info">
             <p className="room-description">{room.description}</p>
+            <p className="room-description">Amenities included: {room.amenities}</p>
+            {room.discountcode && room.discountcode !== "0%" ? (
+              <p className="room-description">Discount: {room.discountcode}</p>
+            ) : (
+              <p className="room-description">No discounts available</p>
+            )}
           </div>
         </div>
         <div className="callout-ctn">
@@ -133,8 +213,8 @@ const RoomDetail = () => {
       <button className="addreview" onClick={() => setIsModalOpen(true)}>Add Review</button>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <ReviewForm
-          initialReview={selectedReview?.review}
-          initialStars={selectedReview?.stars}
+          initialReview={selectedReview?.comment}
+          initialStars={selectedReview?.rating}
           onClose={handleReviewCreation}
         />
       </Modal>
@@ -142,14 +222,19 @@ const RoomDetail = () => {
         <h3>Top Reviews</h3>
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.id} className="review">
-              <p>{review.userName}</p>
-              <p>{new Date(review.createdAt).toLocaleString('default', { month: 'long', year: 'numeric' })}</p>
-              <p>{review.review}</p>
-              <p>Rating: {review.stars} ★</p>
+            <div key={review.reviewid} className="review">
+              <p>{review.username}</p>
+              <p>{review.sentimenttype},score:{review.score}</p>
+              <p>{review.comment}</p>
+              <p>Rating: {review.rating} ★</p>
               <div className="review-actions">
-                <button onClick={() => handleEditReview(review.id)}>Edit</button>
-                <button onClick={() => handleDeleteReview(review.id)}>Delete</button>
+              {review.username === "Mini Saju" && (//need to be changed based on username
+              <>
+              <button onClick={() => handleEditReview(review.reviewid)}>Edit</button>
+              <button onClick={() => handleDeleteReview(review.reviewid)}>Delete</button>
+              </>
+            )}
+
               </div>
             </div>
           ))
