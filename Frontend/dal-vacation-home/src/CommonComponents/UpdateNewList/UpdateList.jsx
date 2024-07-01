@@ -1,33 +1,52 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './AddNewListing.css'; // Import your CSS file for styling
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import './UpdateList.css'; // Assuming AddNewListing.css is the same CSS file used for AddNewListing
 
-function AddNewListing() {
+const UpdateList = () => {
+  const { roomId } = useParams();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     address: '',
     city: '',
     state: '',
-    roomType: 'rooms',
+    roomtype: 'rooms',
     price: '',
     description: '',
     roomImage: null,
-    roomId: '',
-    roomNumber: '',
-    hostedBy: '',
-    discountCode: '0%',
+    roomid: '',
+    roomnumber: '',
+    hostedby: '',
+    discountcode: '0%',
     amenities: '',
-    nextAvailableDate: '',
+    nextavailabledate: '',
+    imageUrl: '',
   });
 
   const [alert, setAlert] = useState(null);
 
-  function generateRoomId() {
-    const timestamp = Date.now().toString(36);
-    const randomString = Math.random().toString(36).substring(2, 10);
-    return `${timestamp}-${randomString}`;
-  }
+  useEffect(() => {
+    const fetchRoomDetails = async () => {
+      try {
+        const response = await axios.post(
+          `https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`,
+          {
+            httpMethod: 'GET',
+            pathParameters: { roomId: roomId },
+          }
+        );
+        const roomData = JSON.parse(response.data.body);
+        setFormData({
+          ...roomData,
+          roomImage: null, // reset the image upload field
+        });
+      } catch (error) {
+        console.error('Error fetching room details:', error);
+      }
+    };
+
+    fetchRoomDetails();
+  }, [roomId]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +70,7 @@ function AddNewListing() {
       return;
     }
 
-    let imageUrl = '';
+    let imageUrl = formData.imageUrl;
 
     if (formData.roomImage) {
       const reader = new FileReader();
@@ -64,6 +83,7 @@ function AddNewListing() {
             { image: base64Image }
           );
           imageUrl = JSON.parse(uploadResponse.data.body).s3_url;
+          console.log(imageUrl);
           await submitForm(imageUrl);
         } catch (error) {
           showAlert('Error uploading image', 'danger');
@@ -78,39 +98,23 @@ function AddNewListing() {
   const submitForm = async (imageUrl) => {
     const dataToSubmit = {
       ...formData,
-      roomId: generateRoomId(),
-      imageUrl: imageUrl,
-      isBooked: false,
+      imageurl: imageUrl,
+      isbooked: false,
     };
 
     try {
       const response = await axios.post(
         'https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations',
-        { httpMethod: "POST", body: dataToSubmit }
+        { httpMethod: "PUT", pathParameters:{roomId:roomId}, body: dataToSubmit }
       );
-      
-      if (response.data.statusCode == 200) {
-        showAlert('Room added successfully', 'success');
-        setFormData({
-          address: '',
-          city: '',
-          state: '',
-          roomType: 'rooms',
-          price: '',
-          description: '',
-          roomImage: null,
-          roomId: '',
-          roomNumber: '',
-          hostedBy: '',
-          discountCode: '0%',
-          amenities: '',
-          nextAvailableDate: '',
-        });
+    console.log(response);
+      if (response.data.statusCode === 200) {
+        showAlert('Room updated successfully', 'success');
         setTimeout(() => {
-          navigate('/');
+          navigate(`/rooms/${roomId}`);
         }, 3000);
       } else {
-        showAlert('Error adding room', 'danger');
+        showAlert('Error updating room', 'danger');
       }
     } catch (error) {
       showAlert('Error submitting form', 'danger');
@@ -125,9 +129,9 @@ function AddNewListing() {
   };
 
   const validateForm = () => {
-    if (!formData.roomNumber.trim() || !formData.address.trim() || !formData.city.trim() || !formData.state.trim() ||
-      !formData.hostedBy.trim() || !formData.price || !formData.description.trim() || !formData.amenities.trim() || 
-      !formData.nextAvailableDate) {
+    if (!formData.roomnumber.trim() || !formData.address.trim() || !formData.city.trim() || !formData.state.trim() ||
+      !formData.hostedby.trim() || !formData.price || !formData.description.trim() || !formData.amenities.trim() || 
+      !formData.nextavailabledate) {
       showAlert('Please fill in all required fields', 'danger');
       return false;
     }
@@ -157,10 +161,10 @@ function AddNewListing() {
         </div>
       )}
       <form className="form-container" onSubmit={handleSubmit}>
-        <h2>Add A New Property</h2>
+        <h2>Update Property</h2>
         <label>
           Room Number
-          <input type="text" name="roomNumber" value={formData.roomNumber} onChange={handleChange} required />
+          <input type="text" name="roomnumber" value={formData.roomnumber} onChange={handleChange} required />
         </label>
         <label>
           Address
@@ -176,11 +180,11 @@ function AddNewListing() {
         </label>
         <label>
           Hosted By
-          <input type="text" name="hostedBy" value={formData.hostedBy} onChange={handleChange} required />
+          <input type="text" name="hostedby" value={formData.hostedby} onChange={handleChange} required />
         </label>
         <label>
           Room Type
-          <select name="roomType" value={formData.roomType} onChange={handleChange} required >
+          <select name="roomtype" value={formData.roomtype} onChange={handleChange} required >
             <option value="rooms">Rooms</option>
             <option value="recreation">Recreation</option>
           </select>
@@ -195,7 +199,7 @@ function AddNewListing() {
         </label>
         <label>
           Discount Code
-          <select name="discountCode" value={formData.discountCode} onChange={handleChange} required >
+          <select name="discountcode" value={formData.discountcode} onChange={handleChange} required >
             <option value="0%">0% off</option>
             <option value="10%">10% off</option>
             <option value="20%">20% off</option>
@@ -210,16 +214,16 @@ function AddNewListing() {
         </label>
         <label>
           Next Available Date
-          <input type="date" name="nextAvailableDate" value={formData.nextAvailableDate} onChange={handleChange} min={getTodayDate()} required />
+          <input type="date" name="nextavailabledate" value={formData.nextavailabledate} onChange={handleChange} min={getTodayDate()} required />
         </label>
         <label>
           Upload Photo
-          <input type="file" onChange={handlePhotoUpload} required />
+          <input type="file" onChange={handlePhotoUpload} />
         </label>
-        <button type="submit">Add New Property</button>
+        <button type="submit">Update Property</button>
       </form>
     </div>
   );
-}
+};
 
-export default AddNewListing;
+export default UpdateList;
