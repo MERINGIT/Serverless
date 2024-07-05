@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "../src/CommonComponents/Headers/Header.jsx";
 import Login from "./Features/User-Authentication/Login";
+import Signup from "./Features/User-Authentication/Signup.js";
 import UserConcern from "./Features/Message-passing/UserConcern.jsx";
 import Rooms from "./CommonComponents/Rooms/Rooms.jsx";
 import RoomDetail from "../src/CommonComponents/RoomDetail/RoomDetail.jsx"
@@ -21,6 +22,7 @@ function App() {
           <Route path="/rooms/:roomId" element={<RoomDetail />} />
           <Route path="/update-room/:roomId" element={<UpdateList />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/home" element={<Login />} />
           <Route path="/tickets" element={<UserConcern />} />
           <Route path="/add" element={<AddNewListing/>}/>
