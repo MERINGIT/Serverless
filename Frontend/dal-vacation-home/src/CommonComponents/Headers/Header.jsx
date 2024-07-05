@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <header className="header">
       <Link to="/">
-        <img src="/logo2.png" alt="DalVaccationHomes Logo" className="logo" />
+        <img src="/logo3.png" alt="DalVacationHomes Logo" className="logo" />
       </Link>
       <div className="quote">
       A rental home is a blank canvas for your life’s most beautiful memories.

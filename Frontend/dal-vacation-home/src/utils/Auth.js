@@ -1,3 +1,4 @@
+import { AuthFlowType } from '@aws-sdk/client-cognito-identity-provider';
 import {
   CognitoUserPool,
   CognitoUser,
@@ -32,9 +33,10 @@ export const signIn = (username, password) => {
       Username: username,
       Password: password,
       AuthFlow: 'CUSTOM_AUTH',
+      AuthFlowType: 'CUSTOM_AUTH',
       AuthParameters: {
-        CHALLENGE_NAME: SRP_A,
-        SRP_A: SRP_A
+        CHALLENGE_NAME: 'CUSTOM_CHALLENGE',
+        SRP_A
       }
     };
 
@@ -58,19 +60,31 @@ export const signIn = (username, password) => {
         switch (challengeParameters.challengeName) {
           case 'CUSTOM_CHALLENGE':
             console.log("Here");
-            // Handle QUESTION challenge
-            // Example: Prompt user to answer security question
             resolve({ cognitoUser, challengeParameters });
             break;
           case 'CAESAR_CIPHER':
-            // Handle CAESAR_CIPHER challenge
-            // Example: Prompt user to solve a cipher
             resolve({ cognitoUser, challengeParameters });
             break;
           default:
             reject(new Error('Unsupported challenge'));
         }
       },
+    });
+  });
+};
+
+export const getUserAttributes = (cognitoUser) => {
+  return new Promise((resolve, reject) => {
+    cognitoUser.getUserAttributes((err, attributes) => {
+      if (err) {
+        reject(err);
+      } else {
+        const result = {};
+        attributes.forEach(attribute => {
+          result[attribute.Name] = attribute.Value;
+        });
+        resolve(result);
+      }
     });
   });
 };

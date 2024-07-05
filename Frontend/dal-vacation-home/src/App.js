@@ -11,6 +11,8 @@ import AddNewListing from "./CommonComponents/AddNewListing/AddNewListing.jsx";
 import VacationSearchBar from "./CommonComponents/SearchBar/VaccationSearchBar.jsx";
 import LookerStudioEmbed from "./Features/Looker-Studio/LookerStudioEmbed.jsx";
 import UpdateList from "./CommonComponents/UpdateNewList/UpdateList.jsx";
+import QuestionAuth from "./Features/User-Authentication/QuestionAuth.js";
+import CypherAuth from "./Features/User-Authentication/CypherAuth.js";
 
 function App() {
   return (
@@ -27,7 +29,8 @@ function App() {
           <Route path="/tickets" element={<UserConcern />} />
           <Route path="/add" element={<AddNewListing/>}/>
           <Route path="/dashboard" element={<LookerStudioEmbed/>}/>
-          
+          <Route path="/question-auth" element={<QuestionAuth />} />
+          <Route path="/cypher-auth" element={<CypherAuth />} />
           
         </Routes>
       </Router>
