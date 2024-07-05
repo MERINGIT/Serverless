@@ -10,7 +10,8 @@
 }
 
 .logo {
-  height: 250px;
+  height: 70px;
+  margin-left: 50px;
   cursor: pointer;
   border: none;
   padding: 0;

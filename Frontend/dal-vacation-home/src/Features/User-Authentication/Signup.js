@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import { Button, FormHelperText, TextField, FormLabel, RadioGroup, Radio, FormControlLabel, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import './Signup.css';
 import { CognitoUserPool, CognitoUserAttribute } from 'amazon-cognito-identity-js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const userPoolData = {
   UserPoolId: process.env.REACT_APP_AUTH_USER_POOL_ID,
@@ -12,6 +12,10 @@ const userPoolData = {
 const userPool = new CognitoUserPool(userPoolData);
 
 function Signup() {
+  const navigate = useNavigate();
+
+  const [name, setName] = useState("");
+  const [nameError, setNameError] = useState(false);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [password, setPassword] = useState("");
@@ -22,11 +26,17 @@ function Signup() {
   const [answerError, setAnswerError] = useState("");
   const [word, setWord] = useState("");
   const [wordError, setWordError] = useState(false);
+  const [profile, setProfile] = useState("");
+  const [profileError, setProfileError] = useState(false);
   const [open, setOpen] = useState(false);
   const [confirmationCode, setConfirmationCode] = useState("");
   const [cognitoUser, setCognitoUser] = useState(null);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value);
@@ -38,6 +48,10 @@ function Signup() {
 
   const handleConfirmPasswordChange = (event) => {
     setConfirmPassword(event.target.value);
+  };
+
+  const handleProfileChange = (event) => {
+    setProfile(event.target.value);
   };
 
   const handleQuestionChange = (event) => {
@@ -58,6 +72,12 @@ function Signup() {
   }
 
   const handleSubmit = async () => {
+    if (!name) {
+      setNameError(true);
+    } else {
+      setNameError(false);
+    }
+
     if (!emailRegex.test(email)) {
       setEmailError(true);
     } else {
@@ -82,18 +102,18 @@ function Signup() {
       setWordError(false);
     }
 
-    if (emailError) {
-      window.alert("Please enter a valid email address");
-    } else if (confirmPassword !== password) {
-      window.alert("Password and confirm password must match");
-    } else if (questionError) {
-      window.alert("Enter a Security Question");
-    } else if (answerError) {
-      window.alert("Enter an answer to the Security Question");
-    } else if (wordError) {
-      window.alert("Enter a secret word");
+    if (!profile) {
+      setProfileError(true);
+    } else {
+      setProfileError(false);
+    }
+
+    if (nameError || emailError || (confirmPassword !== password) || questionError || answerError || wordError || profileError) {
+      window.alert("Please fix all the errors");
     } else {
       const attributeList = [
+        new CognitoUserAttribute({ Name: 'name', Value: name }),
+        new CognitoUserAttribute({ Name: 'profile', Value: profile }),
         new CognitoUserAttribute({ Name: 'email', Value: email }),
         new CognitoUserAttribute({ Name: 'custom:security-question', Value: question }),
         new CognitoUserAttribute({ Name: 'custom:security-answer', Value: answer }),
@@ -129,7 +149,7 @@ function Signup() {
       setCognitoUser(cognitoUser);
       setOpen(false);
       window.alert("Signup confirmed! You can now log in.");
-      // navigate("/login");
+      navigate("/login");
     });
   };
 
@@ -139,6 +159,16 @@ function Signup() {
         <Typography variant="h4" className="signup-title">
           <strong>Sign Up</strong>
         </Typography>
+        <TextField
+          required
+          id="outlined-required"
+          label="Name"
+          margin="normal"
+          onChange={handleNameChange}
+          error={nameError}
+          helperText={nameError ? "Please enter a valid name" : ""}
+          fullWidth
+        />
         <TextField
           required
           id="outlined-required"
@@ -206,6 +236,19 @@ function Signup() {
           sx={{ mt: 1 }}
           fullWidth
         />
+        <FormControl fullWidth>
+          <FormLabel id="demo-row-radio-buttons-group-label">Role</FormLabel>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name="row-radio-buttons-group"
+            onChange={handleProfileChange}
+          >
+            <FormControlLabel value="user" control={<Radio />} label="User" />
+            <FormControlLabel value="property-agent" control={<Radio />} label="Property Agent" />
+          </RadioGroup>
+          <FormHelperText>{profileError ? "Select a profile": ""}</FormHelperText>
+        </FormControl>
         <Button
           variant="contained"
           color="primary"
