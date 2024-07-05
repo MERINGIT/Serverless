@@ -89,6 +89,7 @@ const UserConcern = () => {
               <td>
                 {concern.status === 'Open' ? (
                   <input
+                    className="input_text"
                     type="text"
                     value={concern.comments}
                     onChange={(e) => handleCommentChange(concern.enquiryid, e.target.value)}
