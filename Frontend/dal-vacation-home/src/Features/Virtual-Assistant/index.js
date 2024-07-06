@@ -4,17 +4,17 @@ export default function Chatbot() {
   useEffect(() => {
     // Load the chatbot script
     const script = document.createElement('script');
-    script.src = 'https://d1skssn41hi5y8.cloudfront.net/lex-web-ui-loader.min.js';
+    script.src = 'https://d2o8u5389xszhj.cloudfront.net/lex-web-ui-loader.min.js';
     script.async = true;
 
     script.onload = () => {
       // Initialize the chatbot once the script is loaded
       const loaderOpts = {
-        baseUrl: 'https://d1skssn41hi5y8.cloudfront.net/',
+        baseUrl: 'https://d2o8u5389xszhj.cloudfront.net/',
         shouldLoadMinDeps: true
       };
       const loader = new window.ChatBotUiLoader.IframeLoader(loaderOpts);
-      loader.load(chatbotUiConfig).catch((error) => {
+      loader.load().catch((error) => {
         console.error(error);
       });
     };
