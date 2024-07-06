@@ -2,9 +2,9 @@ const AWS = require('aws-sdk');
 
 // Configure AWS SDK with credentials
 AWS.config.update({
-  accessKeyId: 'ASIAYYRUU4EOOMMW2MN4',
-  secretAccessKey: 'UJNzIwJXIWcVl2CyaHy/idHJoR0iHbFOev4GbT3B',
-  sessionToken: 'IQoJb3JpZ2luX2VjEJD//////////wEaCXVzLXdlc3QtMiJIMEYCIQDlZtbi9LyjSuMa3X6hFvekAKc6/Ponc0aIk++SdRT3BgIhAMjSK6EPNK+Uxgv5D4IyMNH//RVin7+H5meUWbqDzC/ZKqkCCDkQARoMNjAyNDc5NTgzNTE2Igzxn+8FkqEPF5dPor8qhgIfnFJqfu+iQhLYuBYeu7vGmslwwgWmnlKf5XiRVQlJaTLm1gdSDPSwYlcJTwd8CaduhOETLYm2uKVmlDendG8lFJMTwtTqyXHLLnDrbdVT5gwgo3uqsZMH2d1GMkP0VTDxaxddRaU3Ho3CNEmXDvrqfshT9mDFHrf8+g5j8mA2cj8v+KiiC23hzZxyR0cm5Da87AoRww1YGdF3MX/IpWRtGm1kXRElCEbcEt2KCvs/3FmpNwgFVBCjqYQ+qQHpVKqhC9uz1gb3JV+T6Jovw40Tu8i0N6Y3KQ1fBySO4Yk1NA+o3jw7ZGjyVKh8kvY5IuvbPkMbdA+3rypCgP9uVb+heRtVQQfoMLXozbMGOpwBufl/8OzxGyYMl+B70V0jMB5JDR7XN0R8kduQ8tbaGDC+ESEYGlDfxxiE9GnZtYZHPjn05074V74Y8LNqKv5USTi3gJoLJazIRZtsX/aQwZfCMlpPuyTWstvP65hf2bs9Nb88wLvxnzo2bSevqUF1IlUa4049LANMCbYsNAaVdktuKy73k6EfuqFr2dYngkhjk3Djb/Hc//B98XY7',
+  accessKeyId: 'ASIAYYRUU4EOO2UEVGGT',
+  secretAccessKey: 'vig4CpskXYbpM952G0H3eR3eNkjdBPU6+nXZRtw6',
+  sessionToken: 'IQoJb3JpZ2luX2VjEKz//////////wEaCXVzLXdlc3QtMiJIMEYCIQCjVuWfifgaL6KqUMLdfcvndlZSY18KkLASMn4t16XOAQIhANYp1SK1ZCX/RhstL68i/P5c2TLYwIciDX8TpBTc4stMKqkCCGUQARoMNjAyNDc5NTgzNTE2Igy+MLGsyk1HiRt3be0qhgJzUX8YE2E7TcJ/FyZ4E8PnX255XiFY2NRVx4caYETYIraky5FOmhSXnTyORHLpgQUQIrzOkAN9ZPSkJ2ZlzJpQcj7W167KD8MImn+I8dwIBYfn8gZD7iQgK0MeCFBWgvw6vdhrL9oI2SWYN7iS5iKiheHdxBBG5Z/oR1b+AqCHcWrKR5czNR2Fb7a5QfwFbXGK26WzGe8vJ2qGkwQJ8ZLjMQRGg9oS2eAMCoFuni/j4yOM/pOcohQOk+WwgPZ61ECvcuCmQ/N6qARwK7ZhCdhEFYLK16+T7Sh2yyvX/ezE+PDF51nCl7O4tnVZvZveCu4czkEr9afJTVHAHaRx/GFGpTaRg9LaMMyPjLQGOpwBJ032kNNdjA6tleYGevN/NNQ9PCmWG3NErVZpgZ4Wtbp/8Yq+SUHeQmY2u698MZK+TeDZQBrUS4+Sd/WtZAySC7MogOha9VlcPEtrlNJQMSkHq0uYLNg8HZXttOglC8xoerNy9s2dtQNqoy7bFbY3ohLp/M7l+au80Oj1oWUCqemMtcwgk82cESh9NC/dPl25IQKirHLNidTk9H74',
   region: 'us-east-1' // Set the region where your DynamoDB is hosted
 });
 
@@ -38,7 +38,7 @@ exports.helloPubSub = async (event, context) => {
 
     console.log("User found:", user);
 
-   // Step 2: Fetch admin users using scan operation
+    // Step 2: Fetch admin users using scan operation
     const scanParams = {
       TableName: 'usertable',
       FilterExpression: 'usertype = :usertype',
@@ -58,8 +58,18 @@ exports.helloPubSub = async (event, context) => {
 
     console.log("Admin users found:", admins);
 
-    // Step 3: Choose one admin (for simplicity, choosing the first admin)
-    const selectedAdmin = admins[0];
+    // Step 3: Choose a random admin from the list
+    // Step 3: Choose a random admin from the list
+  let selectedAdmin;
+  if (admins.length > 0) {
+    const randomIndex = Math.floor(Math.random() * admins.length);
+    selectedAdmin = admins[randomIndex];
+  } else {
+    console.log("No admin users found");
+    // Handle the case where no admin is available (optional)
+  }
+
+    console.log(selectedAdmin);
 
     // Step 4: Store the enquiry details
     const enquiryParams = {
@@ -68,11 +78,11 @@ exports.helloPubSub = async (event, context) => {
         'enquiryid': new Date().getTime().toString(), // Unique ID for enquiry
         'userid': userId,
         'username': user.username,
-        'useremail': user.email,
+        'useremail': user.useremail,
         'agentid': selectedAdmin.userid,
         'bookingReference': bookingReference,
         'concern': concern,
-        'status': 'new', // Initial status
+        'status': 'Open', // Initial status
         'comments': ""
       }
     };

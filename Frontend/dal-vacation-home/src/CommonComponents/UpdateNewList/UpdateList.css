@@ -1,0 +1,120 @@
+/* AddNewListing.css */
+
+.form-container {
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #808080;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-container h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+  }
+  
+  .form-container label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+    font-style: italic;
+    color: whitesmoke;
+  }
+  
+  .form-container input[type="text"],
+  .form-container input[type="number"],
+  .form-container input[type="date"],
+  .form-container textarea,
+  .form-container select {
+    width: calc(100% - 22px);
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-container input[type="text"]:focus,
+  .form-container input[type="number"]:focus,
+  .form-container input[type="date"]:focus,
+  .form-container textarea:focus,
+  .form-container select:focus {
+    border-color: #3DC6C1;
+  }
+  
+  .form-container textarea {
+    height: 150px;
+  }
+  
+  .form-container input[type="file"] {
+    margin-top: 5px;
+    display: block;
+  }
+  
+  .form-container button[type="submit"] {
+    background-color: #3DC6C1;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 4px;
+    display: block;
+    width: 100%;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-container button[type="submit"]:hover {
+    background-color: #36bfb8;
+  }
+  .alert {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 30px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    overflow-y: auto; 
+  }
+  
+  .alert-success {
+    color: whitesmoke;
+    background-color: #36bfb8;
+    border-color: #36bfb8;
+    font-weight: bold;
+  }
+  
+  .alert-danger {
+    color:black;
+    background-color: red;
+    border-color: #36bfb8;
+    font-weight: bold;
+  }
+  
+  .alert button.close {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 1;
+    color: inherit;
+    text-shadow: none;
+    opacity: 0.5;
+    background-color: transparent;
+    border: 0;
+  }
+  
+  .alert button.close:hover {
+    color: #000;
+    opacity: 0.75;
+  }
+  

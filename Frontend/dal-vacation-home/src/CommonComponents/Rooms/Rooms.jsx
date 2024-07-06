@@ -1,84 +1,90 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import RoomCard from './RoomCard';
 import './Rooms.css';
 import VacationSearchBar from '../SearchBar/VaccationSearchBar';
 
 const Rooms = () => {
   const navigate = useNavigate();
+  const [allRoomsData, setAllRoomsData] = useState([]);
+  const [filteredRoomsData, setFilteredRoomsData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const roomsData = [
-    {
-      id: 1,
-      name: 'Deluxe Room',
-      bed: '2 King Size',
-      price: 250,
-      avgRating: 4.5,
-      previewImage: 'https://i.pinimg.com/originals/ad/34/ad/ad34ad8485eb2eb9fce806826b65375d.jpg',
-    },
-    {
-      id: 2,
-      name: 'Family Room',
-      bed: '2 King Size',
-      price: 300,
-      avgRating: 4.7,
-      previewImage: 'https://lancasterbangkok.com/wp-content/uploads/2019/02/09_1025_Deluxe_Room_Out_In_Night_Final_SM.jpg',
-    },
-    {
-      id: 3,
-      name: 'Suite',
-      bed: '2 King Size',
-      price: 200,
-      avgRating: 4.3,
-      previewImage: 'https://assets-global.website-files.com/5c6d6c45eaa55f57c6367749/624b471bdf247131f10ea14f_61d31b8dbff9b500cbd7ed32_types_of_rooms_in_a_5-star_hotel_2_optimized_optimized.jpeg',
-    },
-    {
-      id: 4,
-      name: 'Luxury Room',
-      bed: '2 King Size',
-      price: 250,
-      avgRating: 4.5,
-      previewImage: 'https://i.pinimg.com/originals/ad/34/ad/ad34ad8485eb2eb9fce806826b65375d.jpg',
-    },
-    {
-      id: 5,
-      name: 'Single Room',
-      bed: '2 King Size',
-      price: 250,
-      avgRating: 4.5,
-      previewImage: 'https://i.pinimg.com/originals/ad/34/ad/ad34ad8485eb2eb9fce806826b65375d.jpg',
-    },
-    {
-      id: 6,
-      name: 'Double Room',
-      bed: '2 King Size',
-      price: 250,
-      avgRating: 4.5,
-      previewImage: 'https://i.pinimg.com/originals/ad/34/ad/ad34ad8485eb2eb9fce806826b65375d.jpg',
-    },
-  ];
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  const fetchRooms = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post('https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations', {
+        httpMethod: 'GET',
+      });
+      const rooms = JSON.parse(response.data.body);
+      setAllRoomsData(rooms);
+      setFilteredRoomsData(rooms); // Initially display all rooms
+    } catch (error) {
+      setError('Error fetching room data');
+      console.error('Error fetching room data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = (searchDetails) => {
+    const { nextavailabledate, roomtype, discount } = searchDetails;
+  
+    const filteredRooms = allRoomsData.filter(room => {
+      const roomAvailableDate = new Date(room.nextavailabledate);
+      const searchStartDate = nextavailabledate ? new Date(nextavailabledate) : null;
+  
+      // Filter by available date
+      const isAvailableDateMatch = !nextavailabledate || roomAvailableDate <= searchStartDate;
+  
+      // Filter by room type
+      const isRoomTypeMatch = !roomtype || room.roomtype === roomtype;
+  
+      // Filter by discount
+      const isDiscountMatch = !discount || room.discountcode === discount;
+  
+      return isAvailableDateMatch && isRoomTypeMatch && isDiscountMatch;
+    });
+  
+    setFilteredRoomsData(filteredRooms);
+  };
+  
 
   const handleClick = (roomId) => {
-    navigate('/rooms/1');
+    navigate(`/rooms/${roomId}`);
   };
 
   const handleDelete = (roomId) => {
     console.log(`Delete room with ID: ${roomId}`);
   };
 
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
+
   return (
-  <div>
-    <VacationSearchBar/>
-    <div className="rooms-container">
-      {roomsData.map((room) => (
-        <RoomCard
-          key={room.id}
-          room={room}
-          onClick={handleClick}
-          onDelete={handleDelete}
-        />
-      ))}
-    </div>
+    <div>
+      <VacationSearchBar onSearch={handleSearch} />
+      <div className="rooms-container">
+        {filteredRoomsData.map((room) => (
+          <RoomCard
+            key={room.roomid}
+            room={room}
+            onClick={handleClick}
+            onDelete={handleDelete}
+          />
+        ))}
+      </div>
     </div>
   );
 };

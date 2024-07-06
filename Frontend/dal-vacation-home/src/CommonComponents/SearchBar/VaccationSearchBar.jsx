@@ -1,70 +1,72 @@
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker'; // Import date picker library
-import 'react-datepicker/dist/react-datepicker.css'; // Import date picker styles
-import './VacationSearchBar.css'; // Import your CSS file for styling
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import './VacationSearchBar.css';
 
-const VacationSearchBar = () => {
+const VacationSearchBar = ({ onSearch }) => {
   const [searchDetails, setSearchDetails] = useState({
-    startDate: null, // Date object for start date
-    endDate: null, // Date object for end date
-    roomType: '' // Type of room
+    nextavailabledate: '',
+    roomtype: '',
+    discount: '',
   });
 
-  // Handle changes in date pickers
-  const handleStartDateChange = (date) => {
-    setSearchDetails({ ...searchDetails, startDate: date });
+  const handleAvailableDateChange = (date) => {
+    setSearchDetails({ ...searchDetails, nextavailabledate: date });
   };
 
-  const handleEndDateChange = (date) => {
-    setSearchDetails({ ...searchDetails, endDate: date });
-  };
-
-  // Handle changes in select input and text input
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setSearchDetails({ ...searchDetails, [name]: value });
   };
 
-  // Handle form submission
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle the search logic here
-    console.log('Search Details:', searchDetails);
+    onSearch(searchDetails);
   };
 
   return (
     <div className="vacation-search-bar">
       <form onSubmit={handleSubmit} className="form-row">
         <div className="form-group">
-          <label>Check-in:</label>
+          <label>Next Available Date:</label>
           <DatePicker
-            selected={searchDetails.startDate}
-            onChange={handleStartDateChange}
+            selected={searchDetails.nextavailabledate}
+            onChange={handleAvailableDateChange}
             dateFormat="dd-MM-yyyy"
             placeholderText="Select date"
             className="date-picker"
-          />
-        </div>
-        <div className="form-group">
-          <label>Check-out:</label>
-          <DatePicker
-            selected={searchDetails.endDate}
-            onChange={handleEndDateChange}
-            dateFormat="dd-MM-yyyy"
-            placeholderText="Select date"
-            className="date-picker"
+            minDate={new Date()} // Set the minimum date to today's date
           />
         </div>
         <div className="form-group">
           <label>Room Type:</label>
-          <input
-            type="text"
-            name="roomType"
-            placeholder="E.g., Deluxe, Standard"
-            value={searchDetails.roomType}
+          <select
+            name="roomtype"
+            value={searchDetails.roomtype}
             onChange={handleInputChange}
             className="room-type-input"
-          />
+          >
+            <option value="">Select Room Type</option>
+            <option value="rooms">Room</option>
+            <option value="recreation">Recreation</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label>Discount:</label>
+          <select
+            name="discount"
+            value={searchDetails.discount}
+            onChange={handleInputChange}
+            className="room-type-input"
+          >
+            <option value="">Select Discount</option>
+            <option value="0%">0% off</option>
+            <option value="10%">10% off</option>
+            <option value="20%">20% off</option>
+            <option value="30%">30% off</option>
+            <option value="50%">50% off</option>
+            <option value="75%">75% off</option>
+          </select>
         </div>
         <button type="submit" className="search-button">SEARCH</button>
       </form>
