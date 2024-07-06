@@ -8,12 +8,14 @@ import Rooms from "./CommonComponents/Rooms/Rooms.jsx";
 import RoomDetail from "../src/CommonComponents/RoomDetail/RoomDetail.jsx"
 import AddNewListing from "./CommonComponents/AddNewListing/AddNewListing.jsx";
 import VacationSearchBar from "./CommonComponents/SearchBar/VaccationSearchBar.jsx";
+import Chatbot from "./Features/Virtual-Assistant/index.js";
 
 function App() {
   return (
     <div>
       <Router>
         <Header />
+        <Chatbot />
         <Routes>
           <Route path="/" element={<Rooms />} />
           <Route path="/rooms/:roomId" element={<RoomDetail />} />
