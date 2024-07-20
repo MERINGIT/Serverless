@@ -2,17 +2,16 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context) => {
-  const req= JSON.parse(event.body)
-  console.log(req);
-  const { userId, bookingReference, concern }=req.data;
-  console.log(event);
+  
+  const { userId, bookingReference, concern }=event.data;
+
 
   try {
     // Step 1: Fetch user details from DynamoDB
     const userParams = {
-      TableName: 'usertable', // Replace with your DynamoDB table name for users
+      TableName: 'Users', // Replace with your DynamoDB table name for users
       Key: {
-        'userid': userId
+        'userId': userId
       }
     };
 
@@ -32,10 +31,10 @@ exports.handler = async (event, context) => {
 
     // Step 2: Fetch admin users using DynamoDB scan operation (example)
     const scanParams = {
-      TableName: 'usertable', // Replace with your DynamoDB table name for users
-      FilterExpression: 'usertype = :usertype',
+      TableName: 'Users', // Replace with your DynamoDB table name for users
+      FilterExpression: 'profile = :profile',
       ExpressionAttributeValues: {
-        ':usertype': 'admin'
+        ':profile': 'agent'
       }
     };
 
@@ -70,13 +69,13 @@ exports.handler = async (event, context) => {
 
     // Step 4: Store the enquiry details in DynamoDB
     const enquiryParams = {
-      TableName: 'enquiries', // Replace with your DynamoDB table name for enquiries
+      TableName: 'Enquiries', // Replace with your DynamoDB table name for enquiries
       Item: {
         'enquiryid': new Date().getTime().toString(), // Unique ID for enquiry
         'userid': userId,
-        'username': user.username,
-        'useremail': user.useremail,
-        'agentid': selectedAdmin.userid,
+        'username': user.name,
+        'useremail': user.email,
+        'agentid': selectedAdmin.userId,
         'bookingReference': bookingReference,
         'concern': concern,
         'status': 'Open', // Initial status

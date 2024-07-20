@@ -9,7 +9,7 @@ function AddNewListing() {
     address: '',
     city: '',
     state: '',
-    roomType: 'rooms',
+    roomType: 'Rooms',
     price: '',
     description: '',
     roomImage: null,
@@ -60,7 +60,7 @@ function AddNewListing() {
 
         try {
           const uploadResponse = await axios.post(
-            'https://ljfq5ths4e.execute-api.us-east-1.amazonaws.com/test/s3upload',
+            'https://yskocg9wy2.execute-api.us-east-1.amazonaws.com/test/s3upload',
             { image: base64Image }
           );
           imageUrl = JSON.parse(uploadResponse.data.body).s3_url;
@@ -85,7 +85,7 @@ function AddNewListing() {
 
     try {
       const response = await axios.post(
-        'https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations',
+        'https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations',
         { httpMethod: "POST", body: dataToSubmit }
       );
       
@@ -95,7 +95,7 @@ function AddNewListing() {
           address: '',
           city: '',
           state: '',
-          roomType: 'rooms',
+          roomType: 'Rooms',
           price: '',
           description: '',
           roomImage: null,
@@ -181,8 +181,8 @@ function AddNewListing() {
         <label>
           Room Type
           <select name="roomType" value={formData.roomType} onChange={handleChange} required >
-            <option value="rooms">Rooms</option>
-            <option value="recreation">Recreation</option>
+            <option value="Rooms">Rooms</option>
+            <option value="Recreation">Recreation</option>
           </select>
         </label>
         <label>

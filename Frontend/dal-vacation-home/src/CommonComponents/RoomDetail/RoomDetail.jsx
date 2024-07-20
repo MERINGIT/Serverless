@@ -15,12 +15,12 @@ const RoomDetail = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-
+//fech the username
   useEffect(() => {
     const fetchRoomDetails = async (roomId) => {
       try {
         setLoading(true);
-        const response = await axios.post(`https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
+        const response = await axios.post(`https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
           {
             httpMethod: 'GET',
             pathParameters: { roomId: roomId },
@@ -37,7 +37,7 @@ const RoomDetail = () => {
 
     const fetchReviews = async () => {
       try {
-        const response = await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, { httpMethod: "GET" });
+        const response = await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, { httpMethod: "GET" });
         var allReviews = JSON.parse(response.data.body);
         allReviews=allReviews.reviews;
         console.log(allReviews);
@@ -62,12 +62,13 @@ const RoomDetail = () => {
 
   const handleDeleteReview = async (reviewId) => {
     try {
-      await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, 
+      await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, 
         {
           httpMethod: 'DELETE',
           body: { reviewid: reviewId },
         }
       );
+      alert('Feedback deleted successfully');
       const updatedReviews = reviews.filter(review => review.reviewid !== reviewId);
       setReviews(updatedReviews);
     } catch (error) {
@@ -83,7 +84,7 @@ const RoomDetail = () => {
   const handleReviewCreation = async (newReview) => {
     if (selectedReview) {
       try {
-        await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, 
+        await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, 
           {
             httpMethod: 'PUT',
             body: {
@@ -99,13 +100,14 @@ const RoomDetail = () => {
         setReviews(updatedReviews);
         setIsModalOpen(false);
         setSelectedReview(null);
+        alert('Feedback edited successfully');
         window.location.reload();
       } catch (error) {
         console.error('Error updating review:', error);
       }
     } else {
       try {
-        await axios.post(`https://f78uk002b1.execute-api.us-east-1.amazonaws.com/test/reviewcrud`, 
+        await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, 
           {
             httpMethod: 'POST',
             body: {
@@ -113,13 +115,13 @@ const RoomDetail = () => {
               comment: newReview.review,
               rating: newReview.stars,
               roomid: roomId,
-              userid: room.userid, // Replace with actual user ID
-              username: "Mini Saju", // Replace with actual user name
+              username: "Joseph PJ", // Replace with actual user name//need to be changed
             },
           }
         );
         setReviews([...reviews, { ...newReview, reviewid: Date.now(), userName: 'Current User', createdAt: new Date().toISOString() }]);
         setIsModalOpen(false);
+        alert('Feedback added successfully');
         window.location.reload();
       } catch (error) {
         console.error('Error creating review:', error);
@@ -129,7 +131,7 @@ const RoomDetail = () => {
 
   const onDelete = async () => {
     try {
-      await axios.post(`https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
+      await axios.post(`https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
         {
           httpMethod: 'DELETE',
           pathParameters: { roomId: roomId },
@@ -228,7 +230,7 @@ const RoomDetail = () => {
               <p>{review.comment}</p>
               <p>Rating: {review.rating} ★</p>
               <div className="review-actions">
-              {review.username === "Mini Saju" && (//need to be changed based on username
+              {review.username === "Mini Saju" && (//need to be changed based on username//need to be changed accordinf to the profile as well
               <>
               <button onClick={() => handleEditReview(review.reviewid)}>Edit</button>
               <button onClick={() => handleDeleteReview(review.reviewid)}>Delete</button>

@@ -8,7 +8,7 @@ exports.processPubSubMessage = async (event, context) => {
   const concern = eventData.message.concern;
 
   // AWS API Gateway endpoint URL
-  const apiGatewayUrl = 'https://565dy2zqlnw3xqzmzcdchdap4i0vkzmj.lambda-url.us-east-1.on.aws/'; // Replace with your AWS API Gateway endpoint URL
+  const apiGatewayUrl = 'https://kw8r81w0l1.execute-api.us-east-1.amazonaws.com/test/gcptolambda/'; // Replace with your AWS API Gateway endpoint URL
 
   // Payload to send to AWS API Gateway
   const payload = {

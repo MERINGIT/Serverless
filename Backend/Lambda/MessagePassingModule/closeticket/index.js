@@ -23,7 +23,7 @@ exports.handler = async (event) => {
         console.log(`Parsed body: enquiryid=${enquiryid}, comments=${comments}, status=${status}`);
 
         const params = {
-            TableName: 'enquiries',
+            TableName: 'Enquiries',
             Key: { enquiryid },
             UpdateExpression: 'set #comments = :comments, #status = :status',
             ExpressionAttributeNames: {
