@@ -37,18 +37,17 @@ const analyzeSentiment = async (text) => {
 // Function to create a review
 const createReview = async (event) => {
   const { reviewid, comment, rating, userid, roomid,username } = event.body;
-  console.log('Creating review with data:', { reviewid, comment, rating, userid, roomid });
+  console.log('Creating review with data:', { reviewid, comment, rating, roomid });
   const { score, type } = await analyzeSentiment(comment);
   console.log(score);
   console.log(type);
 
   const params = {
-    TableName: 'reviewtable', // Verify the table name is correct
+    TableName: 'Review', // Verify the table name is correct
     Item: {
       reviewid,
       comment,
       rating,
-      userid,
       username,
       roomid,
       score,
@@ -73,7 +72,7 @@ const editReview = async (event) => {
   const { score, type } = await analyzeSentiment(comment);
 
   const params = {
-    TableName: 'reviewtable', // Verify the table name is correct
+    TableName: 'Review', // Verify the table name is correct
     Key: { reviewid },
     UpdateExpression: 'set #c = :c, rating = :r, score = :s, sentimenttype = :st',
     ExpressionAttributeNames: {
@@ -104,7 +103,7 @@ const deleteReview = async (event) => {
   console.log('Deleting review with id:', reviewid);
 
   const params = {
-    TableName: 'reviewtable', // Verify the table name is correct
+    TableName: 'Review', // Verify the table name is correct
     Key: { reviewid },
   };
 
@@ -121,7 +120,7 @@ const deleteReview = async (event) => {
 // Function to get all reviews
 const getAllReviews = async () => {
   const params = {
-    TableName: 'reviewtable', // Verify the table name is correct
+    TableName: 'Review', // Verify the table name is correct
   };
 
   try {

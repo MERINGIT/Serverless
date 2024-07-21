@@ -19,7 +19,7 @@ const Rooms = () => {
   const fetchRooms = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations', {
+      const response = await axios.post('https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations', {
         httpMethod: 'GET',
       });
       const rooms = JSON.parse(response.data.body);

@@ -50,6 +50,11 @@ function ProfileButton() {
     navigate('/dashboard');
   };
 
+  const handleTickets = () => {
+    closeMenu();
+    navigate('/tickets');
+  };
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
@@ -64,6 +69,7 @@ function ProfileButton() {
           <li onClick={handleSignup}>Sign Up</li>
           <li onClick={handleAdd}>Add a room</li>
           <li onClick={handleReport}>Report & Analytics</li>
+          <li onClick={handleTickets}>Tickets</li>
         </>
       </ul>
     </>

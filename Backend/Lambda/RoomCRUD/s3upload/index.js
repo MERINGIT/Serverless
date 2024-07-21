@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk');
 const s3 = new AWS.S3();
-const BUCKET_NAME = 's3bucketmerin';//bucket name
+const BUCKET_NAME = 's3bucketmerin1';//bucket name
 
 exports.handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2)); // Log the received event

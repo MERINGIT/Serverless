@@ -59,7 +59,7 @@ const createRoom = async (event) => {
     console.log('Item to be stored:', item);
 
     try {
-        await dynamodb.put({ TableName: 'roomtable', Item: item }).promise();
+        await dynamodb.put({ TableName: 'Rooms', Item: item }).promise();
         console.log('Room created successfully');
         return {
             statusCode: 200,
@@ -80,7 +80,7 @@ const getRoomById = async (roomId) => {
     console.log('getRoomById function called with roomId:', roomId);
 
     try {
-        const result = await dynamodb.get({ TableName: 'roomtable', Key: { roomid: roomId } }).promise();
+        const result = await dynamodb.get({ TableName: 'Rooms', Key: { roomid: roomId } }).promise();
         if (result.Item) {
             console.log('Room found:', result.Item);
             return {
@@ -110,7 +110,7 @@ const listRooms = async () => {
     console.log('listRooms function called');
 
     try {
-        const result = await dynamodb.scan({ TableName: 'roomtable' }).promise();
+        const result = await dynamodb.scan({ TableName: 'Rooms' }).promise();
         console.log('Rooms found:', result.Items);
         return {
             statusCode: 200,
@@ -150,7 +150,7 @@ const updateRoom = async (roomId, event) => {
 
     try {
         const result = await dynamodb.update({
-            TableName: 'roomtable',
+            TableName: 'Rooms',
             Key: { roomid: roomId },
             UpdateExpression: updateExpression,
             ExpressionAttributeNames: expressionAttributeNames,
@@ -178,7 +178,7 @@ const deleteRoom = async (roomId) => {
     console.log('deleteRoom function called with roomId:', roomId);
 
     try {
-        await dynamodb.delete({ TableName: 'roomtable', Key: { roomid: roomId } }).promise();
+        await dynamodb.delete({ TableName: 'Rooms', Key: { roomid: roomId } }).promise();
         console.log('Room deleted successfully');
         return {
             statusCode: 200,

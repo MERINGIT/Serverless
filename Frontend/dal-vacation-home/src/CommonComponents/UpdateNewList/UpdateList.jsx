@@ -10,7 +10,7 @@ const UpdateList = () => {
     address: '',
     city: '',
     state: '',
-    roomtype: 'rooms',
+    roomtype: 'Rooms',
     price: '',
     description: '',
     roomImage: null,
@@ -29,7 +29,7 @@ const UpdateList = () => {
     const fetchRoomDetails = async () => {
       try {
         const response = await axios.post(
-          `https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`,
+          `https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`,
           {
             httpMethod: 'GET',
             pathParameters: { roomId: roomId },
@@ -79,7 +79,7 @@ const UpdateList = () => {
 
         try {
           const uploadResponse = await axios.post(
-            'https://ljfq5ths4e.execute-api.us-east-1.amazonaws.com/test/s3upload',
+            'https://yskocg9wy2.execute-api.us-east-1.amazonaws.com/test/s3upload',
             { image: base64Image }
           );
           imageUrl = JSON.parse(uploadResponse.data.body).s3_url;
@@ -104,7 +104,7 @@ const UpdateList = () => {
 
     try {
       const response = await axios.post(
-        'https://edbukdvnag.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations',
+        'https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations',
         { httpMethod: "PUT", pathParameters:{roomId:roomId}, body: dataToSubmit }
       );
     console.log(response);
@@ -185,8 +185,8 @@ const UpdateList = () => {
         <label>
           Room Type
           <select name="roomtype" value={formData.roomtype} onChange={handleChange} required >
-            <option value="rooms">Rooms</option>
-            <option value="recreation">Recreation</option>
+            <option value="Rooms">Rooms</option>
+            <option value="Recreation">Recreation</option>
           </select>
         </label>
         <label>

@@ -18,7 +18,7 @@ exports.handler = async (event, context, callback) => {
 
     // Prepare the DynamoDB scan parameters
     const params = {
-        TableName: 'enquiries',
+        TableName: 'Enquiries',
         FilterExpression: 'agentid = :agentid',
         ExpressionAttributeValues: {
             ':agentid': userid
