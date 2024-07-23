@@ -1,33 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { respondToAuthChallenge } from '../../utils/Auth'; // Adjust import if necessary
 
-function QuestionAuth() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const userAttributes = location.state?.userAttributes || {};
-  const sessionDetails = location.state?.sessionDetails || {};
+function QuestionAuth({ onAnswer, result }) {
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
 
   useEffect(() => {
-    setQuestion(userAttributes['custom:security-question']);
-  }, [userAttributes]);
+    if (result.challengeParameters.flow === "PROCEDURE_2") {
+      setQuestion(result.userAttributes['custom:security-question'])
+    } else {
+      if (result && result.challengeParameters) {
+        setQuestion(result.challengeParameters.question);
+      }
+    }
+  }, [result]);
 
   const handleAnswerChange = (event) => {
     setAnswer(event.target.value);
   };
 
   const handleVerifyAnswer = async () => {
-    if (answer === userAttributes['custom:security-answer']) {
-      console.log("Verified");
-      navigate('/cypher-auth', { state: {
-        userAttributes: userAttributes,
-        sessionDetails: sessionDetails
-      } });
+    console.log(result);
+    if (result.challengeParameters.flow === "PROCEDURE_2") {
+      result.challengeParameters = { "type" : "CAESAR_CIPHER_AUTH", "flow" : "PROCEDURE_2" }
+      onAnswer(result);
     } else {
-      console.log("Incorrect answer");
+      try {  
+        const response = await respondToAuthChallenge(result.cognitoUser.username, result.cognitoUser.Session, answer);
+
+        if (response.success) {
+          onAnswer(response);
+        } else if (response.challengeName) {
+          onAnswer(response);
+        } else {
+          console.error('Unexpected response:', response);
+        }
+      } catch (err) {
+        console.error('Error verifying answer:', err);
+      }
     }
   };
 

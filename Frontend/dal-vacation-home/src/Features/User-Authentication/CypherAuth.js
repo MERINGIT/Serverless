@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
-import { useLocation } from 'react-router-dom';
-import Cookies from 'js-cookie';
 
-function CypherAuth() {
-  const location = useLocation();
-  const userAttributes = location.state?.userAttributes || {};
-  const sessionDetails = location.state?.sessionDetails || {};
+function CypherAuth({ onSolve, result }) {
   const [actualAnswer, setActualAnswer] = useState("");
   const [answer, setAnswer] = useState("");
+  const [cipher, setCipher] = useState("");
 
   const caesarCipher = (str) => {
     const shift = Math.floor(Math.random() * 25) + 1;
@@ -36,12 +32,14 @@ function CypherAuth() {
         newStr += alphabet[newIndex];
       }
     }
-    return newStr;
+
+    setCipher(newStr);
   }
 
   useEffect(() => {
-    setActualAnswer(userAttributes['custom:ceaser-cypher']);
-  }, [userAttributes]);
+    setActualAnswer(result.userAttributes["custom:caesar-cypher"]);
+    caesarCipher(actualAnswer)
+  }, [result, actualAnswer]);
 
   const handleAnswerChange = (event) => {
     setAnswer(event.target.value);
@@ -49,12 +47,8 @@ function CypherAuth() {
 
   const handleVerifyAnswer = async () => {
     if (answer === actualAnswer) {
-      console.log("Verified");
-      Cookies.set('jwtToken', sessionDetails);
-      Cookies.set('user_id', userAttributes.sub);
-      Cookies.set('email', userAttributes.email);
-      Cookies.set('name', userAttributes.name);
-      Cookies.set('profile', userAttributes.profile);
+      result.challengeParameters = { "type" : "AUTHENTICATED", "flow" : "PROCEDURE_2" }
+      onSolve(result)
     } else {
       console.log("Incorrect answer");
     }
@@ -64,11 +58,11 @@ function CypherAuth() {
     <div className="container">
       <div className="login-box">
         <Typography variant="h4" className="login-title">
-          <strong>Answer Question</strong>
+          <strong>Decrypt Cipher</strong>
         </Typography>
 
         <Typography sx={{ mt: 5 }}>
-          {caesarCipher(actualAnswer, 5)}
+          {cipher}
         </Typography>
 
         <TextField

@@ -82,7 +82,7 @@ const Signup = () => {
       new CognitoUserAttribute({ Name: 'email', Value: email }),
       new CognitoUserAttribute({ Name: 'custom:security-question', Value: question }),
       new CognitoUserAttribute({ Name: 'custom:security-answer', Value: answer }),
-      new CognitoUserAttribute({ Name: 'custom:ceaser-cypher', Value: word }),
+      new CognitoUserAttribute({ Name: 'custom:caesar-cypher', Value: word }),
     ];
 
     userPool.signUp(email, password, attributeList, null, async (err, result) => {
