@@ -19,10 +19,15 @@ const RoomDetail = () => {
   const [selectedReview, setSelectedReview] = useState(null);
 
   const [isUserAnAgent, setIsUserAnAgent] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   useEffect(() => {
     if (Cookies.get("profile") === "property-agent") {
       setIsUserAnAgent(true);
+    }
+
+    if (Cookies.get("user_id")) {
+      setIsUserLoggedIn(true);
     }
 
     const fetchRoomDetails = async (roomId) => {
@@ -223,7 +228,7 @@ const RoomDetail = () => {
           </div>
         </div>
       </div>
-      <button className="addreview" onClick={() => setIsModalOpen(true)}>Add Review</button>
+      {isUserLoggedIn && <button className="addreview" onClick={() => setIsModalOpen(true)}>Add Review</button>}
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <ReviewForm
           initialReview={selectedReview?.comment}
