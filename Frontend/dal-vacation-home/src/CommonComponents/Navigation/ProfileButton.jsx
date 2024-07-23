@@ -2,11 +2,16 @@ import { useState, useEffect, useRef } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import { FiMenu } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import './ProfileButton.css'; // Import the external CSS file
+import './ProfileButton.css';
+
+import { logoutUser } from '../../utils/Auth';
+
+import Cookies from 'js-cookie';
 
 function ProfileButton() {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -16,6 +21,10 @@ function ProfileButton() {
 
   useEffect(() => {
     if (!showMenu) return;
+
+    if (Cookies.get("user_id")) {
+      setIsUserLoggedIn(true);
+    }
 
     const closeMenu = (e) => {
       if (!ulRef.current.contains(e.target)) {
@@ -55,6 +64,20 @@ function ProfileButton() {
     navigate('/tickets');
   };
 
+  const handleLogout = () => {
+    closeMenu();
+    
+    Cookies.remove('jwtToken');
+    Cookies.remove('user_id');
+    Cookies.remove('email');
+    Cookies.remove('name');
+    Cookies.remove('profile');
+
+    logoutUser();
+
+    window.location.reload();
+  }
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
@@ -65,11 +88,12 @@ function ProfileButton() {
       </button>
       <ul className={ulClassName} ref={ulRef}>
         <>
-          <li onClick={handleLogin}>Log In</li>
-          <li onClick={handleSignup}>Sign Up</li>
+          {!isUserLoggedIn && (<li onClick={handleLogin}>Log In</li>)}
+          {!isUserLoggedIn && <li onClick={handleSignup}>Sign Up</li>}
           <li onClick={handleAdd}>Add a room</li>
           <li onClick={handleReport}>Report & Analytics</li>
           <li onClick={handleTickets}>Tickets</li>
+          {isUserLoggedIn && <li onClick={handleLogout}>Logout</li>}
         </>
       </ul>
     </>

@@ -7,6 +7,8 @@ import ReviewForm from '../ReviewForm/ReviewForm';
 import Modal from '../Modal/Modal';
 import "./RoomDetail.css";
 
+import Cookies from 'js-cookie';
+
 const RoomDetail = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
@@ -15,8 +17,14 @@ const RoomDetail = () => {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-//fech the username
+
+  const [isUserAnAgent, setIsUserAnAgent] = useState(false);
+
   useEffect(() => {
+    if (Cookies.get("profile") === "property-agent") {
+      setIsUserAnAgent(true);
+    }
+
     const fetchRoomDetails = async (roomId) => {
       try {
         setLoading(true);
@@ -115,7 +123,7 @@ const RoomDetail = () => {
               comment: newReview.review,
               rating: newReview.stars,
               roomid: roomId,
-              username: "Joseph PJ", // Replace with actual user name//need to be changed
+              username: Cookies.get("name"),
             },
           }
         );
@@ -168,7 +176,10 @@ const RoomDetail = () => {
     <div className="room-details-page">
       <div className="top-section">
         <div className="room-detail">
-          <h1>{room.roomtype} <FontAwesomeIcon icon={faEdit} className="edit-icon" onClick={onUpdate} /> <FontAwesomeIcon icon={faDeleteLeft} className="delete-icon" onClick={onDelete} /></h1>
+          <h1>{room.roomtype}
+            {isUserAnAgent && <FontAwesomeIcon icon={faEdit} className="edit-icon" onClick={onUpdate} />}
+            {isUserAnAgent && <FontAwesomeIcon icon={faDeleteLeft} className="delete-icon" onClick={onDelete} />}
+          </h1>
           <p>Hosted by {room.hostedby}</p>
           <p>{room.address},{room.city}, {room.state}</p>
           <div className="room-images">
@@ -230,12 +241,12 @@ const RoomDetail = () => {
               <p>{review.comment}</p>
               <p>Rating: {review.rating} ★</p>
               <div className="review-actions">
-              {review.username === "Mini Saju" && (//need to be changed based on username//need to be changed accordinf to the profile as well
-              <>
-              <button onClick={() => handleEditReview(review.reviewid)}>Edit</button>
-              <button onClick={() => handleDeleteReview(review.reviewid)}>Delete</button>
-              </>
-            )}
+                {review.username === Cookies.get("name") && (
+                  <>
+                    <button onClick={() => handleEditReview(review.reviewid)}>Edit</button>
+                    <button onClick={() => handleDeleteReview(review.reviewid)}>Delete</button>
+                  </>
+                )}
 
               </div>
             </div>

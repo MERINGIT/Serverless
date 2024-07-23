@@ -140,3 +140,17 @@ export const respondToAuthChallenge = async (username, session, challengeRespons
   }
 };
 
+export const logoutUser = () => {
+  let cognitoUser = userPool.getCurrentUser();
+  return new Promise((resolve, reject) => {
+    if (!cognitoUser) {
+      console.error('No user is currently authenticated.');
+      return reject('No user is currently authenticated.');
+    }
+
+    // Call Cognito's sign out method
+    cognitoUser.signOut();
+    resolve('Logged out successfully.');
+  });
+}
+
