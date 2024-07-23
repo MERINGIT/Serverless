@@ -1,0 +1,194 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to deploy Lambda functions with API Gateway endpoints
+
+Resources:
+  # Lambda Functions
+  GcptoLambdaFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: gcptolambda
+      Handler: gcptolambda/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::339712706194:role/MerRole
+      Code:
+        S3Bucket: s3bucketmerin1
+        S3Key: gcptolambda.zip
+
+  CloseTicketFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: closeticket
+      Handler: closeticket/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::339712706194:role/MerRole
+      Code:
+        S3Bucket: s3bucketmerin1
+        S3Key: closeticket.zip
+
+  FetchingConcernsFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: fetchingconcerns
+      Handler: fetchingconerns/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::339712706194:role/MerRole
+      Code:
+        S3Bucket: s3bucketmerin1
+        S3Key: fetchingconerns.zip
+
+  LextolambdaFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: lextolambda
+      Handler: lextolambda/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::339712706194:role/MerRole
+      Code:
+        S3Bucket: s3bucketmerin1
+        S3Key: lextolambda.zip
+
+  # API Gateway for GcptoLambda
+  GcptoLambdaApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: gcptolambda
+      Description: API Gateway for gcptolambda Lambda function
+
+  GcptoLambdaResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt GcptoLambdaApi.RootResourceId
+      PathPart: gcptolambda
+      RestApiId: !Ref GcptoLambdaApi
+
+  GcptoLambdaMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref GcptoLambdaResource
+      RestApiId: !Ref GcptoLambdaApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${GcptoLambdaFunction.Arn}/invocations
+
+  GcptoLambdaPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref GcptoLambdaFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${GcptoLambdaApi}/*/POST/gcptolambda
+
+  GcptoLambdaDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn: GcptoLambdaMethod
+    Properties:
+      RestApiId: !Ref GcptoLambdaApi
+      StageName: prod
+
+  # API Gateway for CloseTicket
+  CloseTicketApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: closeticket
+      Description: API Gateway for closeticket Lambda function
+
+  CloseTicketResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt CloseTicketApi.RootResourceId
+      PathPart: closeticket
+      RestApiId: !Ref CloseTicketApi
+
+  CloseTicketMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: PUT
+      ResourceId: !Ref CloseTicketResource
+      RestApiId: !Ref CloseTicketApi
+      Integration:
+        IntegrationHttpMethod: PUT
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${CloseTicketFunction.Arn}/invocations
+
+  CloseTicketPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref CloseTicketFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${CloseTicketApi}/*/PUT/closeticket
+
+  CloseTicketDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn: CloseTicketMethod
+    Properties:
+      RestApiId: !Ref CloseTicketApi
+      StageName: prod
+
+  # API Gateway for FetchingConcerns
+  FetchingConcernsApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: fetchingconcerns
+      Description: API Gateway for fetchingconcerns Lambda function
+
+  FetchingConcernsResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt FetchingConcernsApi.RootResourceId
+      PathPart: fetchingconcerns
+      RestApiId: !Ref FetchingConcernsApi
+
+  FetchingConcernsMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref FetchingConcernsResource
+      RestApiId: !Ref FetchingConcernsApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FetchingConcernsFunction.Arn}/invocations
+
+  FetchingConcernsPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref FetchingConcernsFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FetchingConcernsApi}/*/POST/fetchingconcerns
+
+  FetchingConcernsDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn: FetchingConcernsMethod
+    Properties:
+      RestApiId: !Ref FetchingConcernsApi
+      StageName: prod
+
+Outputs:
+  GcptoLambdaApiEndpoint:
+    Description: 'Endpoint URL for GcptoLambda API'
+    Value: 
+      Fn::Sub: https://${GcptoLambdaApi}.execute-api.${AWS::Region}.amazonaws.com/prod/gcptolambda
+
+  CloseTicketApiEndpoint:
+    Description: 'Endpoint URL for CloseTicket API'
+    Value: 
+      Fn::Sub: https://${CloseTicketApi}.execute-api.${AWS::Region}.amazonaws.com/prod/closeticket
+
+  FetchingConcernsApiEndpoint:
+    Description: 'Endpoint URL for FetchingConcerns API'
+    Value: 
+      Fn::Sub: https://${FetchingConcernsApi}.execute-api.${AWS::Region}.amazonaws.com/prod/fetchingconcerns
+##aws cloudformation create-stack --stack-name lambda-message-passing --template-body file://cloudformation.yaml --region us-east-1

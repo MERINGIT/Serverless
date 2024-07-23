@@ -47,8 +47,8 @@ const VacationSearchBar = ({ onSearch }) => {
             className="room-type-input"
           >
             <option value="">Select Room Type</option>
-            <option value="rooms">Room</option>
-            <option value="recreation">Recreation</option>
+            <option value="Rooms">Room</option>
+            <option value="Recreation">Recreation</option>
           </select>
         </div>
         <div className="form-group">
