@@ -1,4 +1,4 @@
-import { AuthFlowType } from '@aws-sdk/client-cognito-identity-provider';
+import { CognitoIdentityProviderClient, RespondToAuthChallengeCommand } from '@aws-sdk/client-cognito-identity-provider';
 import {
   CognitoUserPool,
   CognitoUser,
@@ -21,11 +21,9 @@ AWS.config.update({
   sessionToken: process.env.REACT_APP_AWS_SESSION_TOKEN,
 });
 
-const cognitoIdentityServiceProvider = new AWS.CognitoIdentityServiceProvider();
-
-const userPoolId = process.env.REACT_APP_AUTH_USER_POOL_ID.split('_')[1]
-const srp = new SRPClient(userPoolId)
-const SRP_A = srp.calculateA()
+const userPoolId = process.env.REACT_APP_AUTH_USER_POOL_ID.split('_')[1];
+const srp = new SRPClient(userPoolId);
+const SRP_A = srp.calculateA();
 
 export const signIn = (username, password) => {
   return new Promise((resolve, reject) => {
@@ -36,8 +34,8 @@ export const signIn = (username, password) => {
       AuthFlowType: 'CUSTOM_AUTH',
       AuthParameters: {
         CHALLENGE_NAME: 'CUSTOM_CHALLENGE',
-        SRP_A
-      }
+        SRP_A,
+      },
     };
 
     const authenticationDetails = new AuthenticationDetails(authenticationData);
@@ -57,17 +55,7 @@ export const signIn = (username, password) => {
         reject(err);
       },
       customChallenge: (challengeParameters) => {
-        switch (challengeParameters.challengeName) {
-          case 'CUSTOM_CHALLENGE':
-            console.log("Here");
-            resolve({ cognitoUser, challengeParameters });
-            break;
-          case 'CAESAR_CIPHER':
-            resolve({ cognitoUser, challengeParameters });
-            break;
-          default:
-            reject(new Error('Unsupported challenge'));
-        }
+        resolve({ cognitoUser, challengeParameters });
       },
     });
   });
@@ -108,3 +96,47 @@ export const verifyChallengeResponse = async (challengeName, challengeResponse) 
   // Return true or false based on verification result
   return true; // Replace with actual verification logic
 };
+
+export const respondToAuthChallenge = async (username, session, challengeResponse) => {
+  try {
+    const params = {
+      ClientId: process.env.REACT_APP_AUTH_APP_CLIENT_ID,
+      ChallengeName: "CUSTOM_CHALLENGE",
+      Session: session,
+      UserPoolId: userPoolId,
+      ChallengeResponses: {
+        USERNAME: username,
+        ANSWER: challengeResponse,
+      },
+    };
+
+    console.log('Responding to auth challenge with params:', params);
+
+    const client = new CognitoIdentityProviderClient({ region: process.env.REACT_APP_AWS_REGION });
+
+    const command = new RespondToAuthChallengeCommand(params);
+    const response = await client.send(command);
+
+    console.log('Response from Cognito:', response);
+
+    if (response.AuthenticationResult) {
+      console.log(response);
+      return {
+        success: true,
+        session: response.AuthenticationResult,
+      };
+    } else if (response.ChallengeName) {
+      return {
+        success: false,
+        challengeName: response.ChallengeName,
+        challengeParameters: response.ChallengeParameters,
+      };
+    } else {
+      throw new Error('Unexpected response from RespondToAuthChallenge');
+    }
+  } catch (err) {
+    console.error('Error responding to auth challenge:', JSON.stringify(err, null, 2));
+    throw new Error(`Error responding to auth challenge: ${err.message}`);
+  }
+};
+

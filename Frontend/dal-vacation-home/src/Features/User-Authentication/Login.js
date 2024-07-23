@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { getUserAttributes, signIn } from '../../utils/Auth';
 
 import './Login.css';
 
-const LoginPage = ({ onAuthStateChange }) => {
+const LoginPage = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const navigate = useNavigate();
 
   const handleEmailChange = (event) => setEmail(event.target.value);
   const handlePasswordChange = (event) => setPassword(event.target.value);
@@ -17,19 +16,17 @@ const LoginPage = ({ onAuthStateChange }) => {
   const handleLogin = async () => {
     try {
       const result = await signIn(email, password);
-      console.log(result);
-  
+      
       if (result.challengeParameters) {
-        onAuthStateChange('QUESTION', result.cognitoUser);
+        console.log(result);
+        onLogin(result);
       } else if (result.session) {
         const userAttributes = await getUserAttributes(result.cognitoUser);
+        result.userAttributes = userAttributes
+        result.challengeParameters = { "type" : "QUESTION_AUTH", "flow" : "PROCEDURE_2" }
+        console.log(result);
 
-        navigate('/question-auth', { state: {
-          userAttributes: userAttributes,
-          sessionDetails: result.cognitoUser.signInUserSession.idToken
-        } });
-
-        // onAuthStateChange('AUTHENTICATED', result.cognitoUser);
+        onLogin(result);
       }
     } catch (error) {
       console.error('Login failed:', error);

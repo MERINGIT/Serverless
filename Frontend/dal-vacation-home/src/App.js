@@ -14,6 +14,7 @@ import LookerStudioEmbed from "./Features/Looker-Studio/LookerStudioEmbed.jsx";
 import UpdateList from "./CommonComponents/UpdateNewList/UpdateList.jsx";
 import QuestionAuth from "./Features/User-Authentication/QuestionAuth.js";
 import CypherAuth from "./Features/User-Authentication/CypherAuth.js";
+import LoginFlow from "./Features/User-Authentication/LoginFlow.js";
 
 function App() {
   return (
@@ -25,9 +26,9 @@ function App() {
           <Route path="/" element={<Rooms />} />
           <Route path="/rooms/:roomId" element={<RoomDetail />} />
           <Route path="/update-room/:roomId" element={<UpdateList />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<LoginFlow />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/home" element={<Login />} />
+          <Route path="/home" element={<LoginFlow />} />
           <Route path="/tickets" element={<UserConcern />} />
           <Route path="/add" element={<AddNewListing/>}/>
           <Route path="/dashboard" element={<LookerStudioEmbed/>}/>
