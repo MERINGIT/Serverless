@@ -12,6 +12,7 @@ function ProfileButton() {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [isUserPropertyAgent, setIsUserPropertyAgent] = useState(false);
   const ulRef = useRef();
 
   const toggleMenu = (e) => {
@@ -24,6 +25,10 @@ function ProfileButton() {
 
     if (Cookies.get("user_id")) {
       setIsUserLoggedIn(true);
+    }
+
+    if (Cookies.get("profile") === "property-agent") {
+      setIsUserPropertyAgent(true);
     }
 
     const closeMenu = (e) => {
@@ -90,9 +95,9 @@ function ProfileButton() {
         <>
           {!isUserLoggedIn && (<li onClick={handleLogin}>Log In</li>)}
           {!isUserLoggedIn && <li onClick={handleSignup}>Sign Up</li>}
-          <li onClick={handleAdd}>Add a room</li>
-          <li onClick={handleReport}>Report & Analytics</li>
-          <li onClick={handleTickets}>Tickets</li>
+          {isUserLoggedIn && isUserPropertyAgent && <li onClick={handleAdd}>Add a room</li>}
+          {isUserLoggedIn && isUserPropertyAgent && <li onClick={handleReport}>Report & Analytics</li>}
+          {isUserLoggedIn && isUserPropertyAgent && <li onClick={handleTickets}>Tickets</li>}
           {isUserLoggedIn && <li onClick={handleLogout}>Logout</li>}
         </>
       </ul>
