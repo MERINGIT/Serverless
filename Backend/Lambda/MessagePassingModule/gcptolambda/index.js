@@ -2,8 +2,9 @@ const AWS = require('aws-sdk');
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context) => {
+  const body=JSON.parse(event.body);
+  const { userId, bookingReference, concern }=body.data;
   
-  const { userId, bookingReference, concern }=event.data;
 
 
   try {

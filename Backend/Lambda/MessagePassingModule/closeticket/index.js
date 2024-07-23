@@ -87,7 +87,7 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Methods': 'OPTIONS,PUT,GET,POST',
                 'Access-Control-Allow-Headers': 'Content-Type',
             },
-            body: JSON.stringify({ message: 'Failed to update ticket', error: error.message }),
+            body: JSON.stringify({ message: 'Failed to update ticket', error: event }),
         };
     }
 };

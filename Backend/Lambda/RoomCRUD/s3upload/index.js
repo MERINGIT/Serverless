@@ -6,7 +6,8 @@ exports.handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2)); // Log the received event
 
     try {
-        const base64String = event.image; // base64 encoded image
+        const val=JSON.parse(event.body);
+        const base64String = val.image; // base64 encoded image
         console.log('Base64 image string received.');
 
         const buffer = Buffer.from(base64String, 'base64');

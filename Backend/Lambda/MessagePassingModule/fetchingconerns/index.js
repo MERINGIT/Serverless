@@ -4,9 +4,9 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 exports.handler = async (event, context, callback) => {
     // Log the received event
     console.log('Received event:', JSON.stringify(event, null, 2));
-
+    const  val=JSON.parse(event.body);
     // Extract userid from the event
-    const userid = event.userid;
+    const userid = val.userid;
     console.log('User ID:', userid);
 
     // Define the CORS headers

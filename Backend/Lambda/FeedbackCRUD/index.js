@@ -141,18 +141,18 @@ exports.handler = async (event) => {
     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Credentials': true,
   };
-
+const events=JSON.parse(event.body);
   try {
     let result;
-    switch (event.httpMethod.toLowerCase()) {
+    switch (events.httpMethod.toLowerCase()) {
       case 'post':
-        result = await createReview(event);
+        result = await createReview(events);
         break;
       case 'put':
-        result = await editReview(event);
+        result = await editReview(events);
         break;
       case 'delete':
-        result = await deleteReview(event);
+        result = await deleteReview(events);
         break;
       case 'get':
         result = await getAllReviews();

@@ -28,14 +28,14 @@ const RoomDetail = () => {
     const fetchRoomDetails = async (roomId) => {
       try {
         setLoading(true);
-        const response = await axios.post(`https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
+        const response = await axios.post(`https://keb5kjmf80.execute-api.us-east-1.amazonaws.com/prod/roomcrudoperations`, 
           {
             httpMethod: 'GET',
             pathParameters: { roomId: roomId },
           }
         );
         console.log(response.data);
-        setRoom(JSON.parse(response.data.body));
+        setRoom(response.data);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching room details:', error);
@@ -45,8 +45,8 @@ const RoomDetail = () => {
 
     const fetchReviews = async () => {
       try {
-        const response = await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, { httpMethod: "GET" });
-        var allReviews = JSON.parse(response.data.body);
+        const response = await axios.post(`https://n4n363umn2.execute-api.us-east-1.amazonaws.com/prod/feedbackcrud`, { httpMethod: "GET" });
+        var allReviews = response.data;
         allReviews=allReviews.reviews;
         console.log(allReviews);
         
@@ -70,7 +70,7 @@ const RoomDetail = () => {
 
   const handleDeleteReview = async (reviewId) => {
     try {
-      await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, 
+      await axios.post(`https://n4n363umn2.execute-api.us-east-1.amazonaws.com/prod/feedbackcrud`, 
         {
           httpMethod: 'DELETE',
           body: { reviewid: reviewId },
@@ -92,7 +92,7 @@ const RoomDetail = () => {
   const handleReviewCreation = async (newReview) => {
     if (selectedReview) {
       try {
-        await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, 
+        await axios.post(`https://n4n363umn2.execute-api.us-east-1.amazonaws.com/prod/feedbackcrud`, 
           {
             httpMethod: 'PUT',
             body: {
@@ -115,7 +115,7 @@ const RoomDetail = () => {
       }
     } else {
       try {
-        await axios.post(`https://jrjv8iw6zf.execute-api.us-east-1.amazonaws.com/test/FeedbackCRUD`, 
+        await axios.post(`https://n4n363umn2.execute-api.us-east-1.amazonaws.com/prod/feedbackcrud`, 
           {
             httpMethod: 'POST',
             body: {
@@ -139,7 +139,7 @@ const RoomDetail = () => {
 
   const onDelete = async () => {
     try {
-      await axios.post(`https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`, 
+      await axios.post(`https://keb5kjmf80.execute-api.us-east-1.amazonaws.com/prod/roomcrudoperations`, 
         {
           httpMethod: 'DELETE',
           pathParameters: { roomId: roomId },
