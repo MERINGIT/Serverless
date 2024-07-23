@@ -29,13 +29,13 @@ const UpdateList = () => {
     const fetchRoomDetails = async () => {
       try {
         const response = await axios.post(
-          `https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations`,
+          `https://keb5kjmf80.execute-api.us-east-1.amazonaws.com/prod/roomcrudoperations`,
           {
             httpMethod: 'GET',
             pathParameters: { roomId: roomId },
           }
         );
-        const roomData = JSON.parse(response.data.body);
+        const roomData = (response.data);
         setFormData({
           ...roomData,
           roomImage: null, // reset the image upload field
@@ -79,10 +79,10 @@ const UpdateList = () => {
 
         try {
           const uploadResponse = await axios.post(
-            'https://yskocg9wy2.execute-api.us-east-1.amazonaws.com/test/s3upload',
+            'https://ksqj45fgb6.execute-api.us-east-1.amazonaws.com/prod/s3upload',
             { image: base64Image }
           );
-          imageUrl = JSON.parse(uploadResponse.data.body).s3_url;
+          imageUrl = uploadResponse.data.s3_url;
           console.log(imageUrl);
           await submitForm(imageUrl);
         } catch (error) {
@@ -104,11 +104,11 @@ const UpdateList = () => {
 
     try {
       const response = await axios.post(
-        'https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations',
+        'https://keb5kjmf80.execute-api.us-east-1.amazonaws.com/prod/roomcrudoperations',
         { httpMethod: "PUT", pathParameters:{roomId:roomId}, body: dataToSubmit }
       );
-    console.log(response);
-      if (response.data.statusCode === 200) {
+    console.log(response.status);
+      if (response.status === 200) {
         showAlert('Room updated successfully', 'success');
         setTimeout(() => {
           navigate(`/rooms/${roomId}`);

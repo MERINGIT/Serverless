@@ -19,10 +19,11 @@ const Rooms = () => {
   const fetchRooms = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations', {
+      const response = await axios.post('https://keb5kjmf80.execute-api.us-east-1.amazonaws.com/prod/roomcrudoperations', {
         httpMethod: 'GET',
       });
-      const rooms = JSON.parse(response.data.body);
+      console.log(response);
+      const rooms = response.data;
       setAllRoomsData(rooms);
       setFilteredRoomsData(rooms); // Initially display all rooms
     } catch (error) {

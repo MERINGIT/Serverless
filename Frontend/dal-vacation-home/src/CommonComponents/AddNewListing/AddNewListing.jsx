@@ -60,10 +60,10 @@ function AddNewListing() {
 
         try {
           const uploadResponse = await axios.post(
-            'https://yskocg9wy2.execute-api.us-east-1.amazonaws.com/test/s3upload',
+            'https://ksqj45fgb6.execute-api.us-east-1.amazonaws.com/prod/s3upload',
             { image: base64Image }
           );
-          imageUrl = JSON.parse(uploadResponse.data.body).s3_url;
+          imageUrl = uploadResponse.data.s3_url;
           await submitForm(imageUrl);
         } catch (error) {
           showAlert('Error uploading image', 'danger');
@@ -85,11 +85,11 @@ function AddNewListing() {
 
     try {
       const response = await axios.post(
-        'https://udtjl5zrg0.execute-api.us-east-1.amazonaws.com/test/roomcrudoperations',
+        'https://keb5kjmf80.execute-api.us-east-1.amazonaws.com/prod/roomcrudoperations',
         { httpMethod: "POST", body: dataToSubmit }
       );
-      
-      if (response.data.statusCode == 200) {
+      console.log(response);
+      if (response.status == 200) {
         showAlert('Room added successfully', 'success');
         setFormData({
           address: '',

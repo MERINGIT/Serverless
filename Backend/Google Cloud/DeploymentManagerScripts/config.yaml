@@ -1,0 +1,14 @@
+# config.yaml
+imports:
+- path: cloud_function.py
+
+resources:
+- name: my-pubsub-function
+  type: cloud_function.py
+  properties:
+    region: us-central1
+    sourceArchiveUrl: gs://sourcecodemerin/function-source.zip
+
+#>gcloud deployment-manager deployments create my-deployment --config config.yaml
+#gcloud deployment-manager deployments list
+#gcloud deployment-manager deployments delete my-deployment1

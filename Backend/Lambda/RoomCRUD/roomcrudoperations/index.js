@@ -3,12 +3,14 @@ const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
-    const httpMethod = event.httpMethod;
-    const pathParameters = event.pathParameters;
+
+    const parsedBody = JSON.parse(event.body);
+    const httpMethod = parsedBody.httpMethod;
+    const pathParameters = parsedBody.pathParameters;
 
     switch (httpMethod) {
         case 'POST':
-            return await createRoom(event);
+            return await createRoom(parsedBody.body);
         case 'GET':
             if (pathParameters && pathParameters.roomId) {
                 return await getRoomById(pathParameters.roomId);
@@ -17,7 +19,7 @@ exports.handler = async (event) => {
             }
         case 'PUT':
             if (pathParameters && pathParameters.roomId) {
-                return await updateRoom(pathParameters.roomId, event);
+                return await updateRoom(pathParameters.roomId, parsedBody.body);
             }
             break;
         case 'DELETE':
@@ -35,10 +37,8 @@ exports.handler = async (event) => {
     }
 };
 
-const createRoom = async (event) => {
-    console.log('createRoom function called with event:', event);
-    const body=event.body;
-    console.log('Parsed body:', body);
+const createRoom = async (body) => {
+    console.log('createRoom function called with body:', body);
 
     const item = {
         roomid: body.roomId,
@@ -127,14 +127,13 @@ const listRooms = async () => {
     }
 };
 
-const updateRoom = async (roomId, event) => {
+const updateRoom = async (roomId, body) => {
     console.log('updateRoom function called with roomId:', roomId);
-    const body = event.body;
-    console.log('Parsed body:', body);
+    console.log(body);
 
     // Remove roomid from body if it exists
     delete body.roomid;
-
+    console.log(body);
     const updateExpression = 'set ' + Object.keys(body).map(key => `#${key} = :${key}`).join(', ');
     const expressionAttributeNames = {};
     const expressionAttributeValues = {};
@@ -172,7 +171,6 @@ const updateRoom = async (roomId, event) => {
         };
     }
 };
-
 
 const deleteRoom = async (roomId) => {
     console.log('deleteRoom function called with roomId:', roomId);
