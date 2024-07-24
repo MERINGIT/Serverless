@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserConcern.css'; // Import your custom CSS file for styling
+import Cookies from 'js-cookie';
 
 const UserConcern = () => {
   const [concerns, setConcerns] = useState([]);
@@ -8,7 +9,7 @@ const UserConcern = () => {
 
   useEffect(() => {
     axios.post('https://ay4eubvjrc.execute-api.us-east-1.amazonaws.com/prod/fetchingconcerns/', {
-      userid: '2' // Replace '1' with the actual user ID//to be changed
+      userid: Cookies.get("user_id") // Replace '1' with the actual user ID//to be changed
     })
     .then((response) => {
       console.log(response);
