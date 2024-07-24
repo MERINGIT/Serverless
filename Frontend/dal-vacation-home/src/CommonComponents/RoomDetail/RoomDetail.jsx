@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDeleteLeft, faEdit } from '@fortawesome/free-solid-svg-icons';
 import ReviewForm from '../ReviewForm/ReviewForm';
 import Modal from '../Modal/Modal';
 import "./RoomDetail.css";
+import { Box, Button, Divider, Typography } from "@mui/material";
 
 import Cookies from 'js-cookie';
 
-const RoomDetail = () => {
+const RoomDetail = () => { 
   const { roomId } = useParams();
   const navigate = useNavigate();
   const [reviews, setReviews] = useState([]);
@@ -20,13 +23,17 @@ const RoomDetail = () => {
 
   const [isUserAnAgent, setIsUserAnAgent] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+  const [totalDays, setTotalDays] = useState(0);
 
   useEffect(() => {
-    if (Cookies.get("profile") === "property-agent") {
+    const role = Cookies.get("profile")
+    if (role === "property-agent") {
       setIsUserAnAgent(true);
     }
 
-    if (Cookies.get("user_id")) {
+    if (role === 'user') {
       setIsUserLoggedIn(true);
     }
 
@@ -39,8 +46,15 @@ const RoomDetail = () => {
             pathParameters: { roomId: roomId },
           }
         );
-        console.log(response.data);
         setRoom(response.data);
+        const data = response.data;
+        const defaultStartDate = new Date(data.nextavailabledate);
+        const nextDay = new Date(defaultStartDate);
+        nextDay.setDate(defaultStartDate.getDate() + 1);
+        setRoom(data);
+        setStartDate(defaultStartDate);
+        setEndDate(nextDay);
+        handleTotalDays(defaultStartDate, nextDay)
         setLoading(false);
       } catch (error) {
         console.error('Error fetching room details:', error);
@@ -169,66 +183,128 @@ const RoomDetail = () => {
     const totalRating = reviews.reduce((acc, review) => acc + parseInt(review.rating), 0);
     return (totalRating / reviews.length).toFixed(1);
   };
-  
 
   const averageRating = calculateAverageRating(reviews);
+
+  const handleStartDate = (date) => {
+    setStartDate(date);
+    handleTotalDays(date, endDate);
+  }
+  
+  const handleEndDate = (date) => {
+    setEndDate(date);
+    handleTotalDays(startDate, date);
+  }
+  
+  const handleTotalDays = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    
+    const timeDifference = endDate.getTime() - startDate.getTime();
+    
+    const dayDifference = timeDifference / (1000 * 3600 * 24);
+
+    const totalDays = Math.ceil(dayDifference);
+
+    setTotalDays(totalDays);
+  }
+  
+  const calculateSubTotal = () => {
+    return room.price * totalDays;
+  }
+
+  const calculateDiscount = () => {
+    return (calculateSubTotal() * parseInt(room.discountcode)) / 100;
+  }
+
+  const calculateTotalPrice = () => {
+    return calculateSubTotal() - calculateDiscount();
+  }
 
   if (loading) {
     return <div>Loading...</div>;
   }
-//need to be changed based on admin type
+
   return (
     <div className="room-details-page">
-      <div className="top-section">
-        <div className="room-detail">
-          <h1>{room.roomtype}
-            {isUserAnAgent && <FontAwesomeIcon icon={faEdit} className="edit-icon" onClick={onUpdate} />}
-            {isUserAnAgent && <FontAwesomeIcon icon={faDeleteLeft} className="delete-icon" onClick={onDelete} />}
-          </h1>
-          <p>Hosted by {room.hostedby}</p>
-          <p>{room.address},{room.city}, {room.state}</p>
-          <div className="room-images">
-            {room.imageurl && (
-              <>
-                <img src={room.imageurl} alt={room.roomtype} className="large-image" />
-                <div className="small-images">
-                  <img key={room.roomid + "1"} src={room.imageurl} alt={room.roomtype} />
-                  <img key={room.roomid + "2"} src={room.imageurl} alt={room.roomtype} />
-                  <img key={room.roomid + "3"} src={room.imageurl} alt={room.roomtype} />
-                  <img key={room.roomid + "4"} src={room.imageurl} alt={room.roomtype} />
-                </div>
-              </>
-            )}
-          </div>
-          <div className="room-info">
-            <p className="room-description">{room.description}</p>
-            <p className="room-description">Amenities included: {room.amenities}</p>
-            {room.discountcode && room.discountcode !== "0%" ? (
-              <p className="room-description">Discount: {room.discountcode}</p>
-            ) : (
-              <p className="room-description">No discounts available</p>
-            )}
-          </div>
-        </div>
-        <div className="callout-ctn">
-          <div className="callout-info">
-            <p className="price">${room.price} / night</p>
-            <p className="rating">
-              {reviews.length === 0 ? (
-                <span className="gold-text">★ New</span>
-              ) : (
-                <>
-                  <span className="gold-text">{averageRating} ★</span> <span className="black-text">· {reviewText}</span>
-                </>
-              )}
-            </p>
-            <button className="reserve-button" onClick={() => alert('Feature Coming Soon!')}>
-              Reserve
-            </button>
-          </div>
-        </div>
+      <div className="room-images">
+        {room.imageurl && (
+            <img src={room.imageurl} alt={room.roomtype} className="large-image" />
+        )}
       </div>
-      {isUserLoggedIn && <button className="addreview" onClick={() => setIsModalOpen(true)}>Add Review</button>}
+      <div className="bottom-section">
+        <div className="left-section">
+          <h1>
+            Room {room.roomnumber} 
+            {isUserAnAgent && (
+              <span>
+                <FontAwesomeIcon icon={faEdit} className="edit-icon" onClick={onUpdate} /> <FontAwesomeIcon icon={faDeleteLeft} className="delete-icon" onClick={onDelete} />
+              </span>
+            )
+            }
+          </h1>
+          <p>{room.address}, {room.city}, {room.state}</p>
+          <p>Hosted by {room.hostedby}</p>
+          <div>
+            <Typography variant="h5">About this place</Typography>
+            <p className="room-description">{room.description}</p>
+            <Typography variant="h5">Amenities included</Typography>
+            <p className="room-description">{room.amenities}</p>
+          </div>
+        </div>
+        <div className="right-section">
+              <Box style={{border: '1px solid #000', borderRadius: '1rem', padding: '1rem', marginBottom: '1rem'}}>
+              <p className="price">${room.price} CAD / night</p>
+              <div style={{display: 'flex', }}>
+              <DatePicker
+                selected={startDate}
+                onChange={date => handleStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                minDate={startDate}
+                placeholderText="Start Date"
+                className="date-picker"
+              />
+              <DatePicker
+                selected={endDate}
+                onChange={date => handleEndDate(date)}
+                selectsEnd
+                endDate={endDate}
+                minDate={endDate}
+                placeholderText="End Date"
+                className="date-picker"
+              />
+              </div>
+              <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <div>
+                  <Typography style={{marginBottom: '8px'}}>${room.price} CAD * {totalDays} Nights</Typography>
+                  {room.discountcode && (
+                    <Typography style={{marginBottom: '8px'}}>{room.discountcode} OFF</Typography>
+                  )}
+                </div>
+                <div>
+                  <Typography style={{marginBottom: '8px'}}>${calculateSubTotal()} CAD</Typography>
+                  {room.discountcode && (
+                    <Typography style={{marginBottom: '8px'}}>-${calculateDiscount()} CAD</Typography>
+                  )}
+                </div>
+              </div>
+              <Divider sx={{border: '1px solid #000', marginBottom: '8px'}} />
+              <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <Typography>Total Price</Typography>
+                <Typography>{calculateTotalPrice()} CAD</Typography>
+              </div>
+              </Box>
+              <Button variant="contained" className="reserve-button" onClick={() => alert('Feature Coming Soon!')} disabled={!isUserLoggedIn} style={{backgroundColor: isUserLoggedIn && '#000'}}>
+                Reserve
+              </Button>
+              {
+                isUserLoggedIn && (
+                  <Button variant="contained" className="addreview" onClick={() => setIsModalOpen(true)} style={{marginTop: '1rem'}}>Add Review</Button>
+                )
+              }
+          </div>
+      </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <ReviewForm
           initialReview={selectedReview?.comment}
@@ -237,12 +313,23 @@ const RoomDetail = () => {
         />
       </Modal>
       <div className="reviews-section">
-        <h3>Top Reviews</h3>
+        <h3>
+          <span className="rating">
+            {reviews.length === 0 ? (
+              <span className="gold-text">0 Review</span>
+              ) : (
+              <>
+                <span className="black-text">{reviewText}</span><span className="gold-text"> {averageRating} ★</span>
+              </>
+            )}
+          </span>
+        </h3>
+            
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div key={review.reviewid} className="review">
               <p>{review.username}</p>
-              <p>{review.sentimenttype},score:{review.score}</p>
+              <p>{review.sentimenttype}, score: {review.score}</p>
               <p>{review.comment}</p>
               <p>Rating: {review.rating} ★</p>
               <div className="review-actions">
@@ -252,7 +339,6 @@ const RoomDetail = () => {
                     <button onClick={() => handleDeleteReview(review.reviewid)}>Delete</button>
                   </>
                 )}
-
               </div>
             </div>
           ))

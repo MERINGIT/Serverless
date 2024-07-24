@@ -13,7 +13,7 @@ const AUTH_STAGES = {
   AUTHENTICATED: 'AUTHENTICATED'
 };
 
-const LoginFlow = () => {
+const LoginFlow = ({toggleUpdated}) => {
   const [currentStage, setCurrentStage] = useState(AUTH_STAGES.LOGIN);
   const [result, setResult] = useState(null);
 
@@ -50,7 +50,7 @@ const LoginFlow = () => {
     <div>
       {currentStage === AUTH_STAGES.LOGIN && <Login onLogin={handleLogin} />}
       {currentStage === AUTH_STAGES.QUESTION_AUTH && <QuestionAuth onAnswer={handleLogin} result={result} />}
-      {currentStage === AUTH_STAGES.CAESAR_CIPHER_AUTH && <CypherAuth onSolve={handleLogin} result={result} />}
+      {currentStage === AUTH_STAGES.CAESAR_CIPHER_AUTH && <CypherAuth onSolve={handleLogin} result={result} toggleUpdated={toggleUpdated} />}
     </div>
   );
 };

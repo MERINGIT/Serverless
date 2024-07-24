@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
 
-function CypherAuth({ onSolve, result }) {
+function CypherAuth({ onSolve, result, toggleUpdated }) {
   const [actualAnswer, setActualAnswer] = useState("");
   const [answer, setAnswer] = useState("");
   const [cipher, setCipher] = useState("");
 
   const caesarCipher = (str) => {
     const shift = Math.floor(Math.random() * 25) + 1;
-    const lowerCaseStr = str.toLowerCase();
+    const lowerCaseStr = str?.toLowerCase();
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
     let newStr = '';
   
-    for (let i = 0; i < lowerCaseStr.length; i++) {
+    for (let i = 0; i < lowerCaseStr?.length; i++) {
       const currentLetter = lowerCaseStr[i];
       
-      if (alphabet.indexOf(currentLetter) === -1) {
+      if (alphabet?.indexOf(currentLetter) === -1) {
         newStr += currentLetter;
         continue;
       }
@@ -48,6 +48,7 @@ function CypherAuth({ onSolve, result }) {
   const handleVerifyAnswer = async () => {
     if (answer === actualAnswer) {
       result.challengeParameters = { "type" : "AUTHENTICATED", "flow" : "PROCEDURE_2" }
+      toggleUpdated();
       onSolve(result)
     } else {
       console.log("Incorrect answer");
