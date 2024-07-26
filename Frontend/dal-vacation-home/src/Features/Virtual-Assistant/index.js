@@ -1,6 +1,8 @@
 import React, {useEffect} from "react";
+import { useLocation } from "react-router-dom";
 
 export default function Chatbot() {
+  const location = useLocation();
   useEffect(() => {
     // Load the chatbot script
     const script = document.createElement('script');
@@ -26,6 +28,10 @@ export default function Chatbot() {
       document.body.removeChild(script);
     };
   }, []);
+
+  if(location.pathname === '/login' || location.pathname ==="/signup"){
+    return null;
+  }
 
   return <div id="chatbot-container"></div>;
 }

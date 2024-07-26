@@ -76,7 +76,7 @@ function ResponsiveAppBar({name, role, toggleUpdated}) {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Link to="/">
-            <img src="/logo3.png" alt="DalVacationHomes Logo" className="logo" />
+            <img src="/logo3.png" alt="DalVacationHomes Logo" className="logo" style={{width: '6rem'}} />
           </Link>
         
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>

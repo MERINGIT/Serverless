@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Signup from "./Features/User-Authentication/Signup.js";
 import UserConcern from "./Features/Message-passing/UserConcern.jsx";
 import Rooms from "./CommonComponents/Rooms/Rooms.jsx";
@@ -49,13 +49,10 @@ function App() {
 }
 
 function AppContent({ currentUserName, currentUserEmail, currentUserRole, toggleUpdated }) {
-  const location = useLocation();
-  console.log(location)
-
   return (
     <div>
       <ResponsiveAppBar name={currentUserName} role={currentUserRole} toggleUpdated={toggleUpdated} />
-      {currentUserName && <Chatbot />}
+      <Chatbot />
       <Routes>
         <Route path="/" element={<Rooms />} />
         <Route path="/rooms/:roomId" element={<RoomDetail role={currentUserRole} />} />
