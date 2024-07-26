@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
-import Header from "../src/CommonComponents/Headers/Header.jsx";
 import Signup from "./Features/User-Authentication/Signup.js";
 import UserConcern from "./Features/Message-passing/UserConcern.jsx";
 import Rooms from "./CommonComponents/Rooms/Rooms.jsx";

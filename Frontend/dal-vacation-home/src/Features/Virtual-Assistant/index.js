@@ -4,13 +4,13 @@ export default function Chatbot() {
   useEffect(() => {
     // Load the chatbot script
     const script = document.createElement('script');
-    script.src = 'https://d3mhw9852f278w.cloudfront.net/lex-web-ui-loader.min.js';
+    script.src = 'https://d37ivrc17jbha3.cloudfront.net/lex-web-ui-loader.min.js';
     script.async = true;
 
     script.onload = () => {
       // Initialize the chatbot once the script is loaded
       const loaderOpts = {
-        baseUrl: 'https://d3mhw9852f278w.cloudfront.net/',
+        baseUrl: 'https://d37ivrc17jbha3.cloudfront.net/',
         shouldLoadMinDeps: true
       };
       const loader = new window.ChatBotUiLoader.IframeLoader(loaderOpts);
