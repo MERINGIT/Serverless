@@ -1,0 +1,128 @@
+.room-details-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* margin: 20px; */
+  padding: 2rem 10rem;
+}
+
+.room-images {
+  display: flex;
+  /* flex-direction: column; */
+  /* align-items: center; */
+}
+
+.large-image {
+  width: 1000px;
+  height: 500px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.small-images {
+  display: flex;
+  justify-content: start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.small-images img {
+  width: 235px;
+  height: 235px;
+  /* object-fit: cover; */
+}
+
+.bottom-section {
+  display: flex;
+  gap: 4rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
+
+.left-section {
+  flex: 2;
+}
+
+.right-section {
+  flex: 1;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.callout-ctn {
+  width: 100%;
+}
+
+.callout-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.rating {
+  margin: 10px 0;
+}
+
+.gold-text {
+  color: gold;
+}
+
+.black-text {
+  color: black;
+}
+
+.date-picker {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.reserve-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #000;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.addreview {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.reviews-section {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
+
+.review {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.no-reviews-text {
+  text-align: center;
+  margin-top: 20px;
+}

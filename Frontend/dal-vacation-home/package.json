@@ -1,0 +1,60 @@
+{
+  "name": "dal-vacation-home",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.606.0",
+    "@aws-sdk/client-dynamodb": "^3.606.0",
+    "@aws-sdk/lib-dynamodb": "^3.606.0",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@looker/embed-sdk": "^1.8.5",
+    "@mui/icons-material": "^5.16.0",
+    "@mui/material": "^5.16.0",
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/user-event": "^13.5.0",
+    "amazon-cognito-identity-js": "^6.3.12",
+    "amazon-user-pool-srp-client": "^1.0.4",
+    "aws-sdk": "^2.1652.0",
+    "axios": "^1.7.2",
+    "bootstrap": "^5.3.3",
+    "dotenv": "^16.4.5",
+    "js-cookie": "^3.0.5",
+    "leaflet": "^1.9.4",
+    "modal": "^1.2.0",
+    "react": "^18.3.1",
+    "react-bootstrap": "^2.10.3",
+    "react-datepicker": "^7.1.0",
+    "react-dom": "18.3.1",
+    "react-icons": "^5.2.1",
+    "react-router-dom": "^6.24.0",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^2.1.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

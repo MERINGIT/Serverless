@@ -1,0 +1,92 @@
+.rooms-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3rem;
+  padding: 2rem 5rem;
+}
+
+.room-tile {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  width: calc(25% - 20px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+  position: relative;
+  cursor: pointer;
+  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  /* Set a fixed height for consistency */
+}
+
+.room-tile img {
+  width: 100%;
+  height: 200px;
+  /* Consistent image height */
+  object-fit: cover;
+}
+
+.room-tile:hover {
+  transform: scale(1.05);
+}
+
+.room-info {
+  padding: 10px;
+  background-color: #8e8e8e;
+  flex-grow: 1;
+  /* Ensure this section takes the remaining space */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.room-info h3 {
+  margin: 0 0 10px;
+  color: #333;
+}
+
+.room-info p {
+  margin: 5px 0;
+  
+}
+
+.tooltip {
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  top: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  z-index: 1;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.room-name {
+  color: #333;
+}
+
+.room-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.room-actions button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.room-actions button:first-child {
+  margin-right: 10px;
+}
+
+.hosted-by {
+  color: black;
+  font-weight: bold;
+}

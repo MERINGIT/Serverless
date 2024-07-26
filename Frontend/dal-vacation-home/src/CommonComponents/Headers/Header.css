@@ -1,0 +1,83 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #8e8e8e;
+  border-bottom: 1px solid #8e8e8e;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.logo {
+  height: 70px;
+  margin-left: 50px;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  background: none;
+  display: block;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation li {
+  margin: 0 10px;
+}
+
+.navigation li a {
+  text-decoration: none;
+  color: #000;
+}
+
+.create-new-room-link {
+  position: fixed;
+  text-decoration: none;
+  color: #000;
+  top: 80px;
+  /* Adjust this value as needed to position below the menu button */
+  right: 20px;
+  /* Adjust this value to match the right position of the profile button */
+  text-align: center;
+}
+
+.create-new-room-link:hover {
+  text-decoration: underline;
+}
+
+.profile-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.profile-dropdown {
+  position: fixed;
+  right: 0;
+  top: 60px;
+  /* Adjust this value to move the dropdown lower */
+  background-color: #333333;
+  border: 1px solid whitesmoke;
+  padding: 10px;
+  list-style-type: none;
+  width: 150px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+.quote {
+  flex-grow: 1;
+  text-align: center;
+  font-size: 25px;
+  color: whitesmoke;
+  font-style: italic;
+}

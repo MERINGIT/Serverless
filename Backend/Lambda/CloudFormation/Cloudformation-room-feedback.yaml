@@ -1,0 +1,185 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to deploy three Lambda functions with API Gateway endpoints
+
+Resources:
+  # Lambda Function: roomcrudoperations
+  RoomCrudOperationsFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: roomcrudoperations
+      Handler: roomcrudoperations/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::339712706194:role/MerRole
+      Code:
+        S3Bucket: s3bucketmerin1
+        S3Key: roomcrudoperations.zip
+
+  # Lambda Function: s3upload
+  S3UploadFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: s3upload
+      Handler: s3upload/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::339712706194:role/MerRole
+      Code:
+        S3Bucket: s3bucketmerin1
+        S3Key: s3upload.zip
+
+  # Lambda Function: FeedbackCRUD
+  FeedbackCrudFunction:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: FeedbackCRUD
+      Handler: FeedbackCRUD/index.handler
+      Runtime: nodejs18.x
+      Role: arn:aws:iam::339712706194:role/MerRole
+      Code:
+        S3Bucket: s3bucketmerin1
+        S3Key: FeedbackCRUD.zip
+
+  # API Gateway for roomcrudoperations
+  RoomCrudOperationsApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: roomcrudoperations
+      Description: API Gateway for roomcrudoperations Lambda function
+
+  RoomCrudOperationsResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt RoomCrudOperationsApi.RootResourceId
+      PathPart: roomcrudoperations
+      RestApiId: !Ref RoomCrudOperationsApi
+
+  RoomCrudOperationsMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref RoomCrudOperationsResource
+      RestApiId: !Ref RoomCrudOperationsApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${RoomCrudOperationsFunction.Arn}/invocations
+
+  RoomCrudOperationsPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref RoomCrudOperationsFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${RoomCrudOperationsApi}/*/POST/roomcrudoperations
+
+  RoomCrudOperationsDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn: RoomCrudOperationsMethod
+    Properties:
+      RestApiId: !Ref RoomCrudOperationsApi
+      StageName: prod
+
+  # API Gateway for s3upload
+  S3UploadApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: s3upload
+      Description: API Gateway for s3upload Lambda function
+
+  S3UploadResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt S3UploadApi.RootResourceId
+      PathPart: s3upload
+      RestApiId: !Ref S3UploadApi
+
+  S3UploadMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref S3UploadResource
+      RestApiId: !Ref S3UploadApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${S3UploadFunction.Arn}/invocations
+
+  S3UploadPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref S3UploadFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${S3UploadApi}/*/POST/s3upload
+
+  S3UploadDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn: S3UploadMethod
+    Properties:
+      RestApiId: !Ref S3UploadApi
+      StageName: prod
+
+  # API Gateway for FeedbackCRUD
+  FeedbackCrudApi:
+    Type: 'AWS::ApiGateway::RestApi'
+    Properties:
+      Name: FeedbackCRUD
+      Description: API Gateway for FeedbackCRUD Lambda function
+
+  FeedbackCrudResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      ParentId: !GetAtt FeedbackCrudApi.RootResourceId
+      PathPart: feedbackcrud
+      RestApiId: !Ref FeedbackCrudApi
+
+  FeedbackCrudMethod:
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: POST
+      ResourceId: !Ref FeedbackCrudResource
+      RestApiId: !Ref FeedbackCrudApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${FeedbackCrudFunction.Arn}/invocations
+
+  FeedbackCrudPermission:
+    Type: 'AWS::Lambda::Permission'
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref FeedbackCrudFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: 
+        Fn::Sub: arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${FeedbackCrudApi}/*/POST/feedbackcrud
+
+  FeedbackCrudDeployment:
+    Type: 'AWS::ApiGateway::Deployment'
+    DependsOn: FeedbackCrudMethod
+    Properties:
+      RestApiId: !Ref FeedbackCrudApi
+      StageName: prod
+
+Outputs:
+  RoomCrudOperationsApiEndpoint:
+    Description: 'Endpoint URL for RoomCrudOperations API'
+    Value: 
+      Fn::Sub: https://${RoomCrudOperationsApi}.execute-api.${AWS::Region}.amazonaws.com/prod/roomcrudoperations
+
+  S3UploadApiEndpoint:
+    Description: 'Endpoint URL for S3Upload API'
+    Value: 
+      Fn::Sub: https://${S3UploadApi}.execute-api.${AWS::Region}.amazonaws.com/prod/s3upload
+
+  FeedbackCrudApiEndpoint:
+    Description: 'Endpoint URL for FeedbackCRUD API'
+    Value: 
+      Fn::Sub: https://${FeedbackCrudApi}.execute-api.${AWS::Region}.amazonaws.com/prod/feedbackcrud
+#>aws cloudformation create-stack --stack-name lambda-crud-operations --template-body file://Cloudformation-room-feedback.yaml --region us-east-1
