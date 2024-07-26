@@ -1,26 +1,31 @@
-# Use the official Node.js image as the base image
-FROM node:18
-
-# Set the working directory
+# Step 1: Use an official node image as a base image
+FROM node:18-alpine AS build
+ 
+# Set environment variables
+ENV PORT 8080
+ENV HOST 0.0.0.0
+ 
+# Step 2: Set the working directory
 WORKDIR /app
-
-# Copy the package.json and package-lock.json files
-COPY package.json package-lock.json ./
-
-# Install the dependencies
+ 
+# Step 3: Copy the package.json and package-lock.json files
+COPY package*.json ./
+ 
+# Step 4: Install dependencies
 RUN npm install
-
-# Copy the rest of the application
+ 
+# Step 5: Copy the rest of the application
 COPY . .
-
-# Build the React application
+ 
+# Step 6: Build the application
 RUN npm run build
-
-# Install serve to serve the build directory
+ 
+# Step 7: Install `serve` to run the application
 RUN npm install -g serve
-
-# Expose port 8080 to match Cloud Run's requirements
+ 
+# Expose port 8080 to allow communication to/from container
 EXPOSE 8080
-
-# Serve the built application
+ 
+# Command to run the application
 CMD ["serve", "-s", "build", "-l", "8080"]
+ 

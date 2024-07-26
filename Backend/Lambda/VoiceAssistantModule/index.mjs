@@ -35,7 +35,7 @@ export const handler = async (event) => {
         
         // Publish message to Pub/Sub   
         try {
-            const messageData = Buffer.from(JSON.stringify({ message: { concern, bookingReference, userId: userId.toString() }})).toString('base64');
+            const messageData = Buffer.from(JSON.stringify({ message: { concern, bookingReference, userId }})).toString('base64');
             const messageId = await publishToPubSub('projects/serverless-426402/topics/customer-concern', messageData);
             console.log(`Message ${messageId} published.`);
             message = `Your concern has been raised successfully. Reference ID: ${messageId}`;
@@ -82,17 +82,23 @@ const getBookingDetails = async (bookingReference, booking) => {
 
     try {
         const data = await dynamodb.get(params).promise();
+        let bookingDetail;
         console.log(data);
 
         if (!data.Item) {
             return "No booking found with the provided reference code.";
         }
 
-        const { roomNumber, startDate, endDate, userId } = data.Item;
+        const { roomNumber, startDate, endDate, userId, roomType } = data.Item;
         if(!booking){
             return userId;
         }
-        return `Booking details: Room Number ${roomNumber}, Stay from ${startDate} to ${endDate}.`;
+        if(roomType === 'Rooms'){
+            bookingDetail = `You have booked a normal room with room number ${roomNumber}, from ${startDate} to ${endDate}.`
+        } else{
+            bookingDetail = `You have booked a recreation room with room number ${roomNumber}, from ${startDate} to ${endDate}.`
+        }
+        return bookingDetail;
     } catch (error) {
         console.error(`Error retrieving booking details: ${error}`);
         return "Error retrieving booking details.";

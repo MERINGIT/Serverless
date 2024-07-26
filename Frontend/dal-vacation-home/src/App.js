@@ -56,7 +56,7 @@ function AppContent({ currentUserName, currentUserEmail, currentUserRole, toggle
   return (
     <div>
       <ResponsiveAppBar name={currentUserName} role={currentUserRole} toggleUpdated={toggleUpdated} />
-      {location.pathname !== "/login" && location.pathname !== "/signup" && <Chatbot />}
+      {currentUserName && <Chatbot />}
       <Routes>
         <Route path="/" element={<Rooms />} />
         <Route path="/rooms/:roomId" element={<RoomDetail role={currentUserRole} />} />
