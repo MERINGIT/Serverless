@@ -5,6 +5,7 @@ import CypherAuth from './CypherAuth';
 
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const AUTH_STAGES = {
   LOGIN: 'LOGIN',
@@ -33,6 +34,11 @@ const LoginFlow = ({toggleUpdated}) => {
         Cookies.set('email', result.userAttributes.email);
         Cookies.set('name', result.userAttributes.name);
         Cookies.set('profile', result.userAttributes.profile);
+
+        axios.post("https://ewo9dzucpl.execute-api.us-east-1.amazonaws.com/test/signin", {
+          "userEmail": result.userAttributes.email,
+          "notificationType": "login"
+        })
 
         navigate("/");
         break;
