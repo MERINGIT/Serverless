@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation for Booking Request and Approval Lambda Functions
+
+Resources:
+  BookingRequestLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: BookingRequest.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: your-lambda-code-bucket
+        S3Key: BookingRequest.zip
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          DYNAMODB_BOOKINGS_TABLE: !Ref BookingsTable
+          DYNAMODB_ROOMS_TABLE: !Ref RoomsTable
+          SNS_TOPIC_ARN: !Ref BookingNotificationTopic
+
+  BookingApprovalLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: BookingApproval.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: your-lambda-code-bucket
+        S3Key: BookingApproval.zip
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          DYNAMODB_BOOKINGS_TABLE: !Ref BookingsTable
+          DYNAMODB_ROOMS_TABLE: !Ref RoomsTable
+          SNS_TOPIC_ARN: !Ref BookingNotificationTopic
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      Policies:
+        - PolicyName: LambdaDynamoDBSNSPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: ['dynamodb:GetItem', 'dynamodb:UpdateItem', 'dynamodb:Scan']
+                Resource: [!GetAtt BookingsTable.Arn, !GetAtt RoomsTable.Arn]
+              - Effect: Allow
+                Action: ['sns:Publish']
+                Resource: !Ref BookingNotificationTopic
+
+  BookingsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Bookings
+      AttributeDefinitions:
+        - AttributeName: bookingReference
+          AttributeType: S
+      KeySchema:
+        - AttributeName: bookingReference
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  RoomsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: Rooms
+      AttributeDefinitions:
+        - AttributeName: roomid
+          AttributeType: S
+      KeySchema:
+        - AttributeName: roomid
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+  BookingNotificationTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: BookingNotifications
+
+Outputs:
+  BookingRequestLambdaFunction:
+    Description: "Booking Request Lambda Function ARN"
+    Value: !GetAtt BookingRequestLambda.Arn
+
+  BookingApprovalLambdaFunction:
+    Description: "Booking Approval Lambda Function ARN"
+    Value: !GetAtt BookingApprovalLambda.Arn
+
+  BookingNotificationTopicArn:
+    Description: "SNS Topic ARN for Booking Notifications"
+    Value: !Ref BookingNotificationTopic
