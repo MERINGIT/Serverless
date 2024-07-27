@@ -1,0 +1,414 @@
+---
+Metadata:
+  TemplateId: "arn:aws:cloudformation:us-east-1:339712706194:generatedTemplate/774b7ac2-3476-44e6-9684-97449feed331"
+Parameters:
+  LambdaFunction00verifyauthchallenge00Lt6lTCodeS3KeyOneOfZ8uf0:
+    NoEcho: "true"
+    Type: "String"
+    Description: "The Amazon S3 key of the deployment package.\nThis property can\
+      \ be replaced with other exclusive properties"
+  LambdaFunction00defineauthchallenge00BX25qCodeS3KeyOneOfuLgso:
+    NoEcho: "true"
+    Type: "String"
+    Description: "The Amazon S3 key of the deployment package.\nThis property can\
+      \ be replaced with other exclusive properties"
+  LambdaFunction00createauthchallenge000ipvHCodeS3KeyOneOffQUOr:
+    NoEcho: "true"
+    Type: "String"
+    Description: "The Amazon S3 key of the deployment package.\nThis property can\
+      \ be replaced with other exclusive properties"
+  LambdaFunction00verifyauthchallenge00Lt6lTCodeS3BucketOneOfJ23Zc:
+    NoEcho: "true"
+    Type: "String"
+    Description: "An Amazon S3 bucket in the same AWS-Region as your function. The\
+      \ bucket can be in a different AWS-account.\nThis property can be replaced with\
+      \ other exclusive properties"
+  LambdaFunction00createauthchallenge000ipvHCodeS3BucketOneOfHW0Vi:
+    NoEcho: "true"
+    Type: "String"
+    Description: "An Amazon S3 bucket in the same AWS-Region as your function. The\
+      \ bucket can be in a different AWS-account.\nThis property can be replaced with\
+      \ other exclusive properties"
+  LambdaFunction00defineauthchallenge00BX25qCodeS3BucketOneOfnmXcF:
+    NoEcho: "true"
+    Type: "String"
+    Description: "An Amazon S3 bucket in the same AWS-Region as your function. The\
+      \ bucket can be in a different AWS-account.\nThis property can be replaced with\
+      \ other exclusive properties"
+Resources:
+  LambdaPermission00functiondefineauthchallenge00YuZ01:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunction00defineauthchallenge00BX25q"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:cognito-idp:us-east-1:339712706194:userpool/us-east-1_Gk45U22oW"
+      Principal: "cognito-idp.amazonaws.com"
+  CloudWatchAlarm00TargetTrackingtableUsersProvisionedCapacityLowc40ef71bfd2745ca974b140dda174d0700kUmbB:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "LessThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 300
+      EvaluationPeriods: 3
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb"
+      MetricName: "ProvisionedReadCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb."
+      AlarmName: "TargetTracking-table/Users-ProvisionedCapacityLow-c40ef71b-fd27-45ca-974b-140dda174d07"
+      Statistic: "Average"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 1
+  CloudWatchAlarm00TargetTrackingtableUsersProvisionedCapacityHigh226d95fcfe624e9198854eb2836ae0e400cOfyN:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "GreaterThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 300
+      EvaluationPeriods: 3
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb"
+      MetricName: "ProvisionedReadCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb."
+      AlarmName: "TargetTracking-table/Users-ProvisionedCapacityHigh-226d95fc-fe62-4e91-9885-4eb2836ae0e4"
+      Statistic: "Average"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 1
+  CloudWatchAlarm00TargetTrackingtableUsersProvisionedCapacityHigh9c85cd04fd6b432d8a9d887f97b52490007Gmxj:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "GreaterThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 300
+      EvaluationPeriods: 3
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619"
+      MetricName: "ProvisionedWriteCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619."
+      AlarmName: "TargetTracking-table/Users-ProvisionedCapacityHigh-9c85cd04-fd6b-432d-8a9d-887f97b52490"
+      Statistic: "Average"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 1
+  CloudWatchAlarm00TargetTrackingtableUsersAlarmHigh6d10c417d3f9403d89b9d927aaa72a2b009XMW9:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "GreaterThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 60
+      EvaluationPeriods: 2
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619"
+      MetricName: "ConsumedWriteCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619."
+      AlarmName: "TargetTracking-table/Users-AlarmHigh-6d10c417-d3f9-403d-89b9-d927aaa72a2b"
+      Statistic: "Sum"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 42
+  LambdaPermission00functionverifyauthchallenge008Nirb:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunction00verifyauthchallenge00Lt6lT"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:cognito-idp:us-east-1:339712706194:userpool/us-east-1_Gk45U22oW"
+      Principal: "cognito-idp.amazonaws.com"
+  CloudWatchAlarm00TargetTrackingtableUsersAlarmHigh3b04eaa509714cca9e33022b7f21fc7000Abyx5:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "GreaterThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 60
+      EvaluationPeriods: 2
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb"
+      MetricName: "ConsumedReadCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb."
+      AlarmName: "TargetTracking-table/Users-AlarmHigh-3b04eaa5-0971-4cca-9e33-022b7f21fc70"
+      Statistic: "Sum"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 42
+  CloudWatchAlarm00TargetTrackingtableUsersAlarmLowec95c3659e6b4fe28892b2c137cf5b3600t7RdF:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "LessThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 60
+      EvaluationPeriods: 15
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619"
+      MetricName: "ConsumedWriteCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619."
+      AlarmName: "TargetTracking-table/Users-AlarmLow-ec95c365-9e6b-4fe2-8892-b2c137cf5b36"
+      Statistic: "Sum"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 30
+  LambdaFunction00createauthchallenge000ipvH:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Function"
+    DeletionPolicy: "Retain"
+    Properties:
+      MemorySize: 128
+      Description: ""
+      TracingConfig:
+        Mode: "PassThrough"
+      Timeout: 30
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: "Auto"
+      Handler: "index.handler"
+      Code:
+        S3Bucket:
+          Ref: "LambdaFunction00createauthchallenge000ipvHCodeS3BucketOneOfHW0Vi"
+        S3Key:
+          Ref: "LambdaFunction00createauthchallenge000ipvHCodeS3KeyOneOffQUOr"
+      Role:
+        Fn::GetAtt:
+        - "IAMRole00AuthLambdaRole004mEjW"
+        - "Arn"
+      FileSystemConfigs: []
+      FunctionName: "create-auth-challenge"
+      Runtime: "nodejs20.x"
+      PackageType: "Zip"
+      LoggingConfig:
+        LogFormat: "Text"
+        LogGroup: "/aws/lambda/create-auth-challenge"
+      EphemeralStorage:
+        Size: 512
+      Architectures:
+      - "x86_64"
+  CloudWatchAlarm00TargetTrackingtableUsersProvisionedCapacityLowc2ac046a6db44959a9acac0d24ded1e900dKLCH:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "LessThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 300
+      EvaluationPeriods: 3
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619"
+      MetricName: "ProvisionedWriteCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:8a5217d7-e9c7-467e-88fc-fc277dea7577:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/625b5566-08a4-4212-9f78-8da6923a0619."
+      AlarmName: "TargetTracking-table/Users-ProvisionedCapacityLow-c2ac046a-6db4-4959-a9ac-ac0d24ded1e9"
+      Statistic: "Average"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 1
+  LambdaFunction00verifyauthchallenge00Lt6lT:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Function"
+    DeletionPolicy: "Retain"
+    Properties:
+      MemorySize: 128
+      Description: ""
+      TracingConfig:
+        Mode: "PassThrough"
+      Timeout: 3
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: "Auto"
+      Handler: "index.handler"
+      Code:
+        S3Bucket:
+          Ref: "LambdaFunction00verifyauthchallenge00Lt6lTCodeS3BucketOneOfJ23Zc"
+        S3Key:
+          Ref: "LambdaFunction00verifyauthchallenge00Lt6lTCodeS3KeyOneOfZ8uf0"
+      Role:
+        Fn::GetAtt:
+        - "IAMRole00AuthLambdaRole004mEjW"
+        - "Arn"
+      FileSystemConfigs: []
+      FunctionName: "verify-auth-challenge"
+      Runtime: "nodejs20.x"
+      PackageType: "Zip"
+      LoggingConfig:
+        LogFormat: "Text"
+        LogGroup: "/aws/lambda/verify-auth-challenge"
+      EphemeralStorage:
+        Size: 512
+      Architectures:
+      - "x86_64"
+  IAMRole00AuthLambdaRole004mEjW:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::IAM::Role"
+    DeletionPolicy: "Retain"
+    Properties:
+      Path: "/"
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole"
+      - "arn:aws:iam::aws:policy/service-role/AmazonS3ObjectLambdaExecutionRolePolicy"
+      - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      - "arn:aws:iam::aws:policy/AWSLambdaInvocation-DynamoDB"
+      MaxSessionDuration: 3600
+      RoleName: "AuthLambdaRole"
+      Description: "Allows Auth Lambda functions to call AWS services on your behalf."
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Action: "sts:AssumeRole"
+          Effect: "Allow"
+          Principal:
+            Service: "lambda.amazonaws.com"
+  LambdaPermission00functioncreateauthchallenge00Ptz89:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Permission"
+    DeletionPolicy: "Retain"
+    Properties:
+      FunctionName:
+        Fn::GetAtt:
+        - "LambdaFunction00createauthchallenge000ipvH"
+        - "Arn"
+      Action: "lambda:InvokeFunction"
+      SourceArn: "arn:aws:cognito-idp:us-east-1:339712706194:userpool/us-east-1_Gk45U22oW"
+      Principal: "cognito-idp.amazonaws.com"
+  LambdaFunction00defineauthchallenge00BX25q:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::Lambda::Function"
+    DeletionPolicy: "Retain"
+    Properties:
+      MemorySize: 128
+      Description: ""
+      TracingConfig:
+        Mode: "PassThrough"
+      Timeout: 3
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: "Auto"
+      Handler: "index.handler"
+      Code:
+        S3Bucket:
+          Ref: "LambdaFunction00defineauthchallenge00BX25qCodeS3BucketOneOfnmXcF"
+        S3Key:
+          Ref: "LambdaFunction00defineauthchallenge00BX25qCodeS3KeyOneOfuLgso"
+      Role:
+        Fn::GetAtt:
+        - "IAMRole00AuthLambdaRole004mEjW"
+        - "Arn"
+      FileSystemConfigs: []
+      FunctionName: "define-auth-challenge"
+      Runtime: "nodejs20.x"
+      PackageType: "Zip"
+      LoggingConfig:
+        LogFormat: "Text"
+        LogGroup: "/aws/lambda/define-auth-challenge"
+      EphemeralStorage:
+        Size: 512
+      Architectures:
+      - "x86_64"
+  CloudWatchAlarm00TargetTrackingtableUsersAlarmLow06eba9efadbb4e2c8c4c7263d425bc2700U97Xi:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::CloudWatch::Alarm"
+    DeletionPolicy: "Retain"
+    Properties:
+      ComparisonOperator: "LessThanThreshold"
+      Dimensions:
+      - Value:
+          Ref: "DynamoDBTable00Users00qHH6B"
+        Name: "TableName"
+      Period: 60
+      EvaluationPeriods: 15
+      Namespace: "AWS/DynamoDB"
+      OKActions: []
+      AlarmActions:
+      - "arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb"
+      MetricName: "ConsumedReadCapacityUnits"
+      ActionsEnabled: true
+      AlarmDescription: "DO NOT EDIT OR DELETE. For TargetTrackingScaling policy arn:aws:autoscaling:us-east-1:339712706194:scalingPolicy:83876c86-6270-479a-928c-515b832882e8:resource/dynamodb/table/Users:policyName/$Users-scaling-policy:createdBy/91e78fb1-621d-44a7-8544-0feebc2f5cdb."
+      AlarmName: "TargetTracking-table/Users-AlarmLow-06eba9ef-adbb-4e2c-8c4c-7263d425bc27"
+      Statistic: "Sum"
+      InsufficientDataActions: []
+      Tags: []
+      Threshold: 30
+  DynamoDBTable00Users00qHH6B:
+    UpdateReplacePolicy: "Retain"
+    Type: "AWS::DynamoDB::Table"
+    DeletionPolicy: "Retain"
+    Properties:
+      SSESpecification:
+        SSEEnabled: false
+      TableName: "Users"
+      AttributeDefinitions:
+      - AttributeType: "S"
+        AttributeName: "userId"
+      ContributorInsightsSpecification:
+        Enabled: false
+      BillingMode: "PROVISIONED"
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: false
+      ProvisionedThroughput:
+        WriteCapacityUnits: 1
+        ReadCapacityUnits: 1
+      KeySchema:
+      - KeyType: "HASH"
+        AttributeName: "userId"
+      DeletionProtectionEnabled: false
+      TableClass: "STANDARD"
+      Tags: []
+      TimeToLiveSpecification:
+        Enabled: false

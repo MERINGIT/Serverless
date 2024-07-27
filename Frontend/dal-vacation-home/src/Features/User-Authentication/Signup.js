@@ -7,6 +7,7 @@ import {
 import { CognitoUserPool, CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
+import axios from 'axios';
 
 const userPoolData = {
   UserPoolId: process.env.REACT_APP_AUTH_USER_POOL_ID,
@@ -112,6 +113,12 @@ const Signup = () => {
       console.log('Confirmation result:', result);
       setCognitoUser(cognitoUser);
       setOpen(false);
+
+      axios.post("https://ewo9dzucpl.execute-api.us-east-1.amazonaws.com/test/subscribe", {
+        "userEmail": formData.email,
+        "notificationType": "Registration"
+      });
+
       window.alert("Signup confirmed! You can now log in.");
       navigate("/login");
     });

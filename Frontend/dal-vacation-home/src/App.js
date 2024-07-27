@@ -15,6 +15,7 @@ import LoginFlow from "./Features/User-Authentication/LoginFlow.js";
 import ResponsiveAppBar from "./CommonComponents/Headers/Appbar.js";
 import Cookies from 'js-cookie';
 import PrivateRoute from "./utils/PrivateRoute.js";
+import UserBoking from "./Features/User-bookings/UserBooking.jsx";
 
 function App() {
   const [currentUserName, setCurrentUserName] = useState("");
@@ -93,10 +94,18 @@ function AppContent({ currentUserName, currentUserEmail, currentUserRole, toggle
             </PrivateRoute>
           }
         />
+        
+        <Route
+          path="/bookings"
+          element={
+            <PrivateRoute allowedRoles={['user']}>
+              <UserBoking />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </div>
   );
 }
 
 export default App;
-

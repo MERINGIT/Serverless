@@ -1,0 +1,88 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Cloud Formation for Login and Signup Notifications
+
+Resources:
+  UserNotificationsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: UserNotifications
+
+  DelayedNotificationQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: DelayedNotificationQueue
+      DelaySeconds: 100
+
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: [lambda.amazonaws.com]
+            Action: ['sts:AssumeRole']
+      Policies:
+        - PolicyName: LambdaPermissions
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:UpdateItem'
+                  - 'sns:Publish'
+                  - 'sqs:SendMessage'
+                Resource: '*'
+
+  LoginNotificationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: login-notification-bucket
+        S3Key: login-notification.zip
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref UserNotificationsTopic
+
+  SignupNotificationFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: sign-up-notification-bucket
+        S3Key: signup-notification.zip
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref UserNotificationsTopic
+
+  SubscribeToTopicFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        S3Bucket: Subscribe-to-topic-bucket
+        S3Key: subscribe-to-topic.zip
+      Runtime: nodejs14.x
+      Environment:
+        Variables:
+          TOPIC_ARN: !Ref UserNotificationsTopic
+          QUEUE_URL: !GetAtt DelayedNotificationQueue.QueueUrl
+
+Outputs:
+  UserNotificationsTopicArn:
+    Description: ARN of the SNS topic for user notifications
+    Value: !Ref UserNotificationsTopic
+
+  DelayedNotificationQueueUrl:
+    Description: URL of the SQS queue for delayed notifications
+    Value: !GetAtt DelayedNotificationQueue.QueueUrl
