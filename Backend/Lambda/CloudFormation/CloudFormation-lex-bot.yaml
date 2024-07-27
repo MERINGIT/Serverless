@@ -1,0 +1,133 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  DalVacationHomeLexBot:
+    Type: "AWS::Lex::Bot"
+    Properties: 
+      Name: "DalVacationHome"
+      Locale: "en-US"
+      ChildDirected: false
+      Intents:
+        - IntentName: "Login"
+          IntentVersion: "$LATEST"
+        - IntentName: "RegistrationAssistance"
+          IntentVersion: "$LATEST"
+        - IntentName: "BookingDetails"
+          IntentVersion: "$LATEST"
+        - IntentName: "RaiseConcern"
+          IntentVersion: "$LATEST"
+      ClarificationPrompt:
+        MaxAttempts: 2
+        Messages:
+          - ContentType: "PlainText"
+            Content: "I'm sorry, I didn't understand that. Can you please repeat?"
+      AbortStatement:
+        Messages:
+          - ContentType: "PlainText"
+            Content: "Sorry, I could not understand. Goodbye."
+      IdleSessionTTLInSeconds: 300
+
+  LoginIntent:
+    Type: "AWS::Lex::Intent"
+    Properties: 
+      Name: "Login"
+      SampleUtterances:
+        - "I want to login"
+        - "Login to my account"
+        - "Please log me in"
+      FulfillmentActivity:
+        Type: "CodeHook"
+        CodeHook:
+          MessageVersion: "1.0"
+          Uri: !GetAtt VirtualAssistantLambda.Arn
+
+  RegistrationAssistanceIntent:
+    Type: "AWS::Lex::Intent"
+    Properties: 
+      Name: "RegistrationAssistance"
+      SampleUtterances:
+        - "I need help with registration"
+        - "Help me register"
+        - "I want to register"
+      FulfillmentActivity:
+        Type: "CodeHook"
+        CodeHook:
+          MessageVersion: "1.0"
+          Uri: !GetAtt VirtualAssistantLambda.Arn
+
+  BookingDetailsIntent:
+    Type: "AWS::Lex::Intent"
+    Properties: 
+      Name: "BookingDetails"
+      SampleUtterances:
+        - "Tell me my booking details"
+        - "I want to know my booking status"
+        - "Give me details of my booking"
+      FulfillmentActivity:
+        Type: "CodeHook"
+        CodeHook:
+          MessageVersion: "1.0"
+          Uri: !GetAtt VirtualAssistantLambda.Arn
+
+  RaiseConcernIntent:
+    Type: "AWS::Lex::Intent"
+    Properties: 
+      Name: "RaiseConcern"
+      SampleUtterances:
+        - "I want to raise a concern"
+        - "I have a complaint"
+        - "I need help with an issue"
+      FulfillmentActivity:
+        Type: "CodeHook"
+        CodeHook:
+          MessageVersion: "1.0"
+          Uri: !GetAtt VirtualAssistantLambda.Arn
+
+  VirtualAssistantLambda:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      FunctionName: "VirtualAssistantLambda"
+      Handler: "index.handler"
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: "nodejs14.x"
+      Code:
+        ZipFile: |
+          exports.handler = async (event) => {
+            // Lambda function code to process Lex bot requests
+            console.log("Event: ", event);
+            // Add your code logic here
+            const response = {
+              dialogAction: {
+                type: 'Close',
+                fulfillmentState: 'Fulfilled',
+                message: {
+                  contentType: 'PlainText',
+                  content: `This is a response from VirtualAssistantLambda for the intent ${event.currentIntent.name}.`
+                }
+              }
+            };
+            return response;
+          };
+
+  LambdaExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service: "lambda.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Policies:
+        - PolicyName: "LambdaPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                  - "lex:PostText"
+                  - "lex:PostContent"
+                Resource: "*"
