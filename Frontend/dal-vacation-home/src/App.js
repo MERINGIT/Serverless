@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
-import Header from "../src/CommonComponents/Headers/Header.jsx";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Signup from "./Features/User-Authentication/Signup.js";
 import UserConcern from "./Features/Message-passing/UserConcern.jsx";
 import Rooms from "./CommonComponents/Rooms/Rooms.jsx";
@@ -16,6 +15,7 @@ import LoginFlow from "./Features/User-Authentication/LoginFlow.js";
 import ResponsiveAppBar from "./CommonComponents/Headers/Appbar.js";
 import Cookies from 'js-cookie';
 import PrivateRoute from "./utils/PrivateRoute.js";
+import UserBoking from "./Features/User-bookings/UserBooking.jsx";
 
 function App() {
   const [currentUserName, setCurrentUserName] = useState("");
@@ -50,13 +50,10 @@ function App() {
 }
 
 function AppContent({ currentUserName, currentUserEmail, currentUserRole, toggleUpdated }) {
-  const location = useLocation();
-  console.log(location)
-
   return (
     <div>
       <ResponsiveAppBar name={currentUserName} role={currentUserRole} toggleUpdated={toggleUpdated} />
-      {location.pathname !== "/login" && location.pathname !== "/signup" && <Chatbot />}
+      <Chatbot />
       <Routes>
         <Route path="/" element={<Rooms />} />
         <Route path="/rooms/:roomId" element={<RoomDetail role={currentUserRole} />} />
@@ -97,10 +94,18 @@ function AppContent({ currentUserName, currentUserEmail, currentUserRole, toggle
             </PrivateRoute>
           }
         />
+        
+        <Route
+          path="/bookings"
+          element={
+            <PrivateRoute allowedRoles={['user']}>
+              <UserBoking />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </div>
   );
 }
 
 export default App;
-

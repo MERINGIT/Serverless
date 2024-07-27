@@ -26,6 +26,8 @@ const RoomDetail = () => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
   const [totalDays, setTotalDays] = useState(0);
+  const userId = Cookies.get("user_id");
+  const userEmail = Cookies.get("email");
 
   useEffect(() => {
     const role = Cookies.get("profile")
@@ -221,6 +223,24 @@ const RoomDetail = () => {
     return calculateSubTotal() - calculateDiscount();
   }
 
+  const handleBookRoom = async () => {
+    console.log(typeof startDate);
+    const sd = startDate.toISOString().split('T')[0];
+    const ed = endDate.toISOString().split('T')[0];
+    const response = await axios.post("https://kpw0wgwm0m.execute-api.us-east-1.amazonaws.com/prod/bookingreq",
+      {
+        roomid: roomId,
+        userId,
+        userEmail,
+        startDate: sd,
+        endDate: ed
+      }
+    );
+    console.log(response)
+    alert('Your booking is in approval. You will receive the mail regarding your booking status shortly.');
+    navigate('/bookings');
+  }
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -295,7 +315,7 @@ const RoomDetail = () => {
                 <Typography>{calculateTotalPrice()} CAD</Typography>
               </div>
               </Box>
-              <Button variant="contained" className="reserve-button" onClick={() => alert('Feature Coming Soon!')} disabled={!isUserLoggedIn} style={{backgroundColor: isUserLoggedIn && '#000'}}>
+              <Button variant="contained" className="reserve-button" onClick={handleBookRoom} disabled={!isUserLoggedIn} style={{backgroundColor: isUserLoggedIn && '#000'}}>
                 Reserve
               </Button>
               {
