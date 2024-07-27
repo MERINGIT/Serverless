@@ -44,7 +44,7 @@ Resources:
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        S3Bucket: your-lambda-code-bucket
+        S3Bucket: login-notification-bucket
         S3Key: login-notification.zip
       Runtime: nodejs14.x
       Environment:
@@ -57,7 +57,7 @@ Resources:
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        S3Bucket: your-lambda-code-bucket
+        S3Bucket: sign-up-notification-bucket
         S3Key: signup-notification.zip
       Runtime: nodejs14.x
       Environment:
@@ -70,7 +70,7 @@ Resources:
       Handler: index.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        S3Bucket: your-lambda-code-bucket
+        S3Bucket: Subscribe-to-topic-bucket
         S3Key: subscribe-to-topic.zip
       Runtime: nodejs14.x
       Environment:

@@ -8,7 +8,7 @@ Resources:
       Handler: BookingRequest.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        S3Bucket: your-lambda-code-bucket
+        S3Bucket: BookingRequestBucket
         S3Key: BookingRequest.zip
       Runtime: nodejs14.x
       Environment:
@@ -23,7 +23,7 @@ Resources:
       Handler: BookingApproval.handler
       Role: !GetAtt LambdaExecutionRole.Arn
       Code:
-        S3Bucket: your-lambda-code-bucket
+        S3Bucket: Booking-Approval-Bucket
         S3Key: BookingApproval.zip
       Runtime: nodejs14.x
       Environment:
@@ -43,7 +43,7 @@ Resources:
               Service: [lambda.amazonaws.com]
             Action: ['sts:AssumeRole']
       Policies:
-        - PolicyName: LambdaDynamoDBSNSPolicy
+        - PolicyName: SNSPolicy
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
