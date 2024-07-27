@@ -34,7 +34,7 @@ const settings = [
     }, 
     { 
         name: 'My Bookings',
-        route: "/",
+        route: "/bookings",
         role: 'user'
     }
 ];
