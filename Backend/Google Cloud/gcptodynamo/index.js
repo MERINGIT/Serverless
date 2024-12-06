@@ -8,7 +8,7 @@ exports.processPubSubMessage = async (event, context) => {
   const concern = eventData.message.concern;
 
   // AWS API Gateway endpoint URL
-  const apiGatewayUrl = 'api-url'; // Replace with your AWS API Gateway endpoint URL
+  //const apiGatewayUrl = 'api-url'; // Replace with your AWS API Gateway endpoint URL
 
   // Payload to send to AWS API Gateway
   const payload = {
